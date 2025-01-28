@@ -39,7 +39,7 @@ interests = [
   icon = "linkedin"
   link = "https://www.linkedin.com/in/edwige-cyffers/"
 [[extra.avatar_icons]]
-  icon = "academic"
+  icon = "google-scholar"
   link = "https://scholar.google.com/citations?user=WDB4HqIAAAAJ"
 +++
 
