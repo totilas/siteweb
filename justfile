@@ -7,4 +7,7 @@ serve: build
     zola serve
 
 deploy: build
+    git add .
+    git commit
     echo "todo"
+    git tag "$(date '+%Y-%m-%d--%H-%M-%S')"
