@@ -7,6 +7,22 @@ compile_sass = false
 # Whether to build a search index to be used later on by a JavaScript library
 build_search_index = false
 
+title = "Edwige Cyffers"
+
+
+theme = "kodama-theme"
+
+[translations]
+Biography = "Who am I (and who I'm not lol)"
+Interests = "Research Interests"
+Education = "Education"
+toc = "Table of Contents"
+Published = "Published"
+Abstract = "Abstract"
+volume = "volume"
+number = "number"
+pages = "pages"
+
 [markdown]
 # Whether to do syntax highlighting
 # Theme can be customised by setting the `highlight_theme` variable to a theme supported by Zola
@@ -14,3 +30,11 @@ highlight_code = true
 
 [extra]
 # Put all your custom variables here
+avatar = "static/img/photo.png"
+avatar_icons = "static/img/photo.png"
+favicon = "static/img/photo.png"
+
+email = "edwige.cyffers[at]ens-lyon.fr"
+contact_in_index = false
+
+menu_items = []
