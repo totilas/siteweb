@@ -10,6 +10,6 @@ date = 2022-09-15
     arxiv = "https://arxiv.org/abs/2210.04620"
 
     url_slides = "https://www.youtube.com/watch?v=0E6zsjIpp7U"
-
+    # image = "img/flamby.png"
 +++
 

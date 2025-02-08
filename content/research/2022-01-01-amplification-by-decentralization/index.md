@@ -10,7 +10,7 @@ extra.code = "https://github.com/totilas/privacy-amplification-by-decentralizati
 
 extra.url_slides = "https://slideslive.com/38980590/privacy-amplification-by-decentralization?ref=speaker-53053"
 
-extra.image = "img/paper.png"
+extra.image = "./img/paper.png"
 
 extra.featured = true
 
