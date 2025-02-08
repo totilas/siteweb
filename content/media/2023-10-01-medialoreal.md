@@ -1,9 +1,8 @@
----
-title: "Science popularization after L'Oréal-Unesco French Young Talents Awards"
-description: "Several media outreach on my research"
-date: 2023-10-01
----
-
++++
+title = "Science popularization after L'Oréal-Unesco French Young Talents Awards"
+description = "Several media outreach on my research"
+date = 2023-10-01
++++
 I have the opportunity to talk to several media:
 - A very nice article in [CNRS journal](https://www.ins2i.cnrs.fr/fr/cnrsinfo/edwige-cyffers-vers-des-ia-plus-ethiques)
 - A radio interview, around 20 minutes at [Vivre FM](https://www.vivrefm.com/posts/2023/10/edwige-cyffers-la-vie-privee-et-l-intelligence-artificielle)

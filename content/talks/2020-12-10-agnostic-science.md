@@ -1,10 +1,8 @@
----
-title:  "Artificial Intelligence and Agnostic Science"
-description: "Differential Privacy: a new notion of the privacy for a new paradigm of data?"
-date: 2020-12-10
----
-
-
++++
+title = "Artificial Intelligence and Agnostic Science"
+description = "Differential Privacy: a new notion of the privacy for a new paradigm of data?"
+date = 2020-12-10
++++
 ![](/img/dp.png)
 
 
