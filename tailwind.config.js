@@ -18,18 +18,6 @@ const colors = require('tailwindcss/colors')
 //   900: '#164e63',
 // },
 
-// The other way to define colors is to reuse existing ones:
-//
-// 'tahiti' = colors.green
-
-// The only colors used in the theme are blue purple indigo for text/fill. and white should be used at one place or an other too.
-
-// With love
-
-// --
-// Your "chaton"
-
-
 module.exports = {
   content: ["./templates/**/*.html", "./themes/kodama-theme/templates/**/*.html"],
   theme: {
@@ -37,11 +25,37 @@ module.exports = {
       blue: colors.green,
       purple: colors.emerald,
       indigo: colors.teal
+    },
+    extend : {
+      backgroundColor: {
+        DEFAULT: 'rgb(255, 255, 255)',    // --background-color
+        header: 'rgb(250, 250, 250)',     // --header-background-color
+        code: 'rgb(247, 248, 250)',       // --code-background
+      },
+      textColor: {
+        DEFAULT: 'rgb(51, 51, 51)',       // --text-color
+      },
+      borderColor: {
+        DEFAULT: 'rgb(195, 195, 195)',    // --border-color
+      },
+
     }
   },
   variants: {},
   plugins: [
       require('@tailwindcss/typography'),
+      function({ addBase }) {
+        addBase({
+          'a': {
+            color: 'rgb(29, 96, 163)',      // --link-color
+            '&:hover': {
+              color: 'rgb(29, 163, 136)',   // --link-hover-color
+              borderBottomColor: 'rgb(0, 120, 132)', // --link-hover-line-color
+            }
+          }
+        })
+      }
+  
   ],
 };
 

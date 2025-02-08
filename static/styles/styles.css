@@ -124,7 +124,7 @@
   /* 2 */
   border-style: solid;
   /* 2 */
-  border-color: currentColor;
+  border-color: rgb(195, 195, 195);
   /* 2 */
 }
 
@@ -552,6 +552,15 @@ video {
 
 [hidden]:where(:not([hidden="until-found"])) {
   display: none;
+}
+
+a {
+  color: rgb(29, 96, 163);
+}
+
+a:hover {
+  color: rgb(29, 163, 136);
+  border-bottom-color: rgb(0, 120, 132);
 }
 
 .container {
@@ -1478,7 +1487,7 @@ video {
 }
 
 #header {
-  background-color: white;
+  background-color: rgb(250, 250, 250);
 }
 
 .zola-anchor {
