@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title -%}
-{% set section =  get_section(path=page.ancestors[1], metadata_only=true)  -%}
+{% set section = get_section(path=page.ancestors[1], metadata_only=true) -%}
 <title>{% if section -%}{{ section.title }} | {% endif %} {{ config.title }}</title>
 {% endblock title -%}
 
@@ -12,50 +12,60 @@
 {% if bibtex_path -%}
 {% set plaintex = load_data(path=bibtex_path, required=false, format="plain") -%}
 {% if plaintex %}
-  {% set bibtex = load_data(path=bibtex_path, required=false, format="bibtex") -%}
-  {% set bibdata = bibtex.bibliographies[0].tags -%}
+{% set bibtex = load_data(path=bibtex_path, required=false, format="bibtex") -%}
+{% set bibdata = bibtex.bibliographies[0].tags -%}
 {% endif -%}
 {% endif -%}
 
 <div class="container max-w-3xl mx-auto px-4">
   <div class="pt-8 flex-col mb-8">
-    <h1 class="grow font-bold font-sans break-normal text-gray-900 text-3xl">{{publication::title(page=page, bibtags=bibdata)}}</h1>
+    <h1 class="grow font-bold font-sans break-normal text-gray-900 text-3xl">{{publication::title(page=page,
+      bibtags=bibdata)}}</h1>
     <div class="grow">
       <p class="text-sm text-slate-400">{{publication::authors(page=page, bibtags=bibdata)}}</p>
     </div>
     <div class="grow">
       <p class="text-sm text-slate-400">{{publication::details(page=page, bibtags=bibdata)}}</p>
     </div>
-    <div class="grow pt-2"> 
+    <div class="grow pt-2">
       {% if page.extra.url_pdf %}
-      <a class="rounded-md border-solid border border-blue-600 inline-flex items-center text-blue-600 justify-center px-2 py-1 mr-2 text-xs font-bold" target="_blank" href="{{ page.extra.url_pdf }}"> pdf </a>
+      <a class="rounded-md border-solid border border-blue-600 inline-flex items-center text-blue-600 justify-center px-2 py-1 mr-2 text-xs font-bold"
+        target="_blank" href="{{ page.extra.url_pdf }}"> pdf </a>
       {% elif page.extra.pdf %}
-      <a class="rounded-md border-solid border border-blue-600 inline-flex items-center text-blue-600 justify-center px-2 py-1 mr-2 text-xs font-bold" target="_blank" href="{{ config.base_url ~ page.path ~ page.extra.pdf }}"> pdf </a>
+      <a class="rounded-md border-solid border border-blue-600 inline-flex items-center text-blue-600 justify-center px-2 py-1 mr-2 text-xs font-bold"
+        target="_blank" href="{{ config.base_url ~ page.path ~ page.extra.pdf }}"> pdf </a>
       {% endif %}
 
       {% if page.extra.arxiv %}
-      <a class="rounded-md border-solid border border-blue-600 inline-flex items-center text-blue-600 justify-center px-2 py-1 mr-2 text-xs font-bold" target="_blank" href="{{ page.extra.arxiv }}"> arxiv </a>
+      <a class="rounded-md border-solid border border-blue-600 inline-flex items-center text-blue-600 justify-center px-2 py-1 mr-2 text-xs font-bold"
+        target="_blank" href="{{ page.extra.arxiv }}"> arxiv </a>
       {% endif %}
 
       {% if page.extra.code %}
-      <a class="rounded-md border-solid border border-blue-600 inline-flex items-center text-blue-600 justify-center px-2 py-1 mr-2 text-xs font-bold" target="_blank" href="{{ page.extra.code }}"> code </a>
+      <a class="rounded-md border-solid border border-blue-600 inline-flex items-center text-blue-600 justify-center px-2 py-1 mr-2 text-xs font-bold"
+        target="_blank" href="{{ page.extra.code }}"> code </a>
       {% endif %}
 
       {% if page.extra.url_poster %}
-      <a class="rounded-md border-solid border border-blue-600 inline-flex items-center text-blue-600 justify-center px-2 py-1 mr-2 text-xs font-bold" target="_blank" href="{{ page.extra.url_poster }}"> poster </a>
+      <a class="rounded-md border-solid border border-blue-600 inline-flex items-center text-blue-600 justify-center px-2 py-1 mr-2 text-xs font-bold"
+        target="_blank" href="{{ page.extra.url_poster }}"> poster </a>
       {% elif page.extra.poster %}
-      <a class="rounded-md border-solid border border-blue-600 inline-flex items-center text-blue-600 justify-center px-2 py-1 mr-2 text-xs font-bold" target="_blank" href="{{ config.base_url ~ page.path ~ page.extra.poster }}"> slides </a>
+      <a class="rounded-md border-solid border border-blue-600 inline-flex items-center text-blue-600 justify-center px-2 py-1 mr-2 text-xs font-bold"
+        target="_blank" href="{{ config.base_url ~ page.path ~ page.extra.poster }}"> slides </a>
       {% endif %}
 
 
       {% if page.extra.url_slides %}
-      <a class="rounded-md border-solid border border-blue-600 inline-flex items-center text-blue-600 justify-center px-2 py-1 mr-2 text-xs font-bold" target="_blank" href="{{ page.extra.url_slides }}"> slides </a>
+      <a class="rounded-md border-solid border border-blue-600 inline-flex items-center text-blue-600 justify-center px-2 py-1 mr-2 text-xs font-bold"
+        target="_blank" href="{{ page.extra.url_slides }}"> slides </a>
       {% elif page.extra.slides %}
-      <a class="rounded-md border-solid border border-blue-600 inline-flex items-center text-blue-600 justify-center px-2 py-1 mr-2 text-xs font-bold" target="_blank" href="{{ config.base_url ~ page.path ~ page.extra.slides }}"> slides </a>
+      <a class="rounded-md border-solid border border-blue-600 inline-flex items-center text-blue-600 justify-center px-2 py-1 mr-2 text-xs font-bold"
+        target="_blank" href="{{ config.base_url ~ page.path ~ page.extra.slides }}"> slides </a>
       {% endif %}
 
       {% if bibdata and bibdata.url %}
-      <a class="rounded-md border-solid border border-blue-600 inline-flex items-center text-blue-600 justify-center px-2 py-1 mr-2 text-xs font-bold" href="{{bibdata.url}}"> url </a>
+      <a class="rounded-md border-solid border border-blue-600 inline-flex items-center text-blue-600 justify-center px-2 py-1 mr-2 text-xs font-bold"
+        href="{{bibdata.url}}"> url </a>
       {% endif %}
     </div>
   </div>
@@ -68,7 +78,7 @@
 
   {% if page.extra.image -%}
   {% set image = resize_image(path=page.extra.image, format="webp", op="fit_height", height=200) %}
-        <img class="object-center h-52 mx-auto" src="{{image.url}}" alt="Profile image"/>
+  <img class="object-center h-52 mx-auto" src="{{image.url}}" alt="Profile image" />
   {% endif -%}
   {% set abstract = publication::abstract(page=page, bibtags=bibdata) -%}
   {% if abstract -%}
@@ -80,7 +90,7 @@
   <div>
     <p class="font-bold">Bibtex</p>
     <div class="prose prose-indigo pb-4">
-      <pre ><code class="select-all">{{ plaintex | safe }}</code></pre>
+      <pre><code class="select-all">{{ plaintex | safe }}</code></pre>
     </div>
   </div>
   {% endif -%}
