@@ -18,16 +18,19 @@ const colors = require('tailwindcss/colors')
 //   900: '#164e63',
 // },
 
+
+const my_colors = {
+  600: 'rgb(29, 96, 163)',
+  800: 'rgb(29, 163, 136)'
+}
+
 module.exports = {
   content: ["./templates/**/*.html", "./themes/kodama-theme/templates/**/*.html"],
   theme: {
     colors:{
-      blue: {
-        600: 'rgb(29, 96, 163)',
-        800: 'rgb(29, 163, 136)'
-      },
-      purple: colors.emerald,
-      indigo: colors.teal
+      blue: my_colors,
+      purple: my_colors,
+      indigo: my_colors
     },
     extend : {
       backgroundColor: {
