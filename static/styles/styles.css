@@ -1137,14 +1137,14 @@ a:hover {
   margin-right: auto;
 }
 
-.my-8 {
-  margin-top: 2rem;
-  margin-bottom: 2rem;
-}
-
 .my-4 {
   margin-top: 1rem;
   margin-bottom: 1rem;
+}
+
+.my-8 {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
 }
 
 .mb-8 {
@@ -1509,15 +1509,15 @@ a:hover {
 }
 
 .visited\:fill-purple-600:visited {
-  fill: #059669;
+  fill: rgb(29, 96, 163);
 }
 
 .visited\:stroke-purple-600:visited {
-  stroke: #059669;
+  stroke: rgb(29, 96, 163);
 }
 
 .visited\:text-purple-600:visited {
-  color: rgb(5 150 105 );
+  color: rgb(29 96 163 );
 }
 
 .hover\:fill-blue-800:hover {
