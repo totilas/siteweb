@@ -22,7 +22,10 @@ module.exports = {
   content: ["./templates/**/*.html", "./themes/kodama-theme/templates/**/*.html"],
   theme: {
     colors:{
-      blue: colors.green,
+      blue: {
+        600: 'rgb(29, 96, 163)',
+        800: 'rgb(29, 163, 136)'
+      },
       purple: colors.emerald,
       indigo: colors.teal
     },
