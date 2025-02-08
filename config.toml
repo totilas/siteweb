@@ -37,6 +37,4 @@ favicon = "static/img/photo.png"
 email = "edwige.cyffers[at]ens-lyon.fr"
 contact_in_index = false
 
-menu_items = [
-      { path = "#contacts", name = "Contact" },
-]
+menu_items = []
