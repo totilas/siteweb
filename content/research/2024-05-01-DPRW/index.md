@@ -4,6 +4,8 @@ date= 2024-05-01
 
 [extra]
     type = "paper"
+    authors = [ "Edwige Cyffers", "Aurélien Bellet", "Jalaj Upadhyay" ]
+
     arxiv = "https://arxiv.org/abs/2402.07471"
     code = "https://github.com/totilas/dprandomwalk"
     # image = "img/southgraph2.png"

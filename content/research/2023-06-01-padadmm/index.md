@@ -4,6 +4,9 @@ date = 2023-06-01
 
 [extra]
     type = "paper"
+    authors = [ "Edwige Cyffers", "Aurélien Bellet", "Debabrota Basu" ]
+
+
     arxiv = "https://arxiv.org/abs/2302.12559"
     code = "https://github.com/totilas/padadmm"
     slides = "https://slideslive.com/39002791/from-noisy-fixed-point-iterations-to-private-admm-for-centralized-and-federated-learning"

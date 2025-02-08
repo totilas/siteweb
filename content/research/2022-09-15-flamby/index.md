@@ -4,6 +4,8 @@ description = "Paper published at NeurIPS 2022, Datasets and Benchmark track"
 date = 2022-09-15
 
 [extra]
+    authors = [ "Jean Ogier du Terrail", "Samy-Safwan Ayed", "Edwige Cyffers", "Felix Grimberg", "Chaoyang He", "Regis Loeb", "Paul Mangold", "Tanguy Marchand", "Othmane Marfoq", "Erum Mushtaq" ]
+
     code = "http://www.github.com/owkin/flamby"
     type = "paper"
 

@@ -4,6 +4,9 @@ date = 2022-09-15
 
 [extra]
     type = "paper"
+    authors = [ "Edwige Cyffers", "Mathieu Even", "Aurélien Bellet", "Laurent Massoulié" ]
+
+
     arxiv = "https://arxiv.org/abs/2206.05091"
     code = "https://github.com/totilas/muffliato"
     slides = "https://slideslive.com/38992072/muffliato-peertopeer-privacy-amplification-for-decentralized-optimization-and-averaging"
