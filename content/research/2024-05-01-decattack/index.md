@@ -10,5 +10,5 @@ date = 2024-05-01
 
     arxiv = "https://arxiv.org/abs/2402.10001"
     code = "https://github.com/abdellahelmrini/decattack"
-    # image = "img/decattack.png"
+    image = "img/decattack.png"
 +++
