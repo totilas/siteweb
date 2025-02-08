@@ -14,11 +14,18 @@
   </div>
   <hr class="border-b-1 border-gray-400 mb-8">
   {% if page.extra.image %}
-  {% set image_path = page.relative_path | split(pat="/") | slice(end=-1) | join(sep="/") %}
-  {% set image = resize_image(path=image_path ~ "/" ~ page.extra.image, format="webp", op="fit", height=200, width=800)
-  %}
-  <img class="object-center h-52 mx-auto" src="{{ image.url }}" alt="description" />
+    <div class="py-4 my-4">
+      {% set image_path = page.extra.image %}
+      {% if not image_path is starting_with("/") %}
+        {% set image_path = page.relative_path | split(pat="/") | slice(end=-1) | join(sep="/") %}
+        {% set image_path = image_path ~ "/" ~ page.extra.image %}
+      {% endif %}
+      {% set image = resize_image(path=image_path, format="webp", op="fit", height=200, width=800) %}
+      <img class="object-center max-h-52 mx-auto" src="{{ image.url }}" alt="description" />
+    </div>
   {% endif -%}
+
+
   {% if page.extra.tldr -%}
   <p class="pb-4 text-gray-600"> <span class="font-bold">TLDR.</span> {{ page.extra.tldr | safe }} </p>
   {% endif -%}

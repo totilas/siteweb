@@ -1142,6 +1142,11 @@ a:hover {
   margin-bottom: 2rem;
 }
 
+.my-4 {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
 .mb-8 {
   margin-bottom: 2rem;
 }
@@ -1192,6 +1197,10 @@ a:hover {
 
 .h-6 {
   height: 1.5rem;
+}
+
+.max-h-52 {
+  max-height: 13rem;
 }
 
 .w-12 {
