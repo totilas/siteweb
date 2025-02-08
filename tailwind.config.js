@@ -44,3 +44,16 @@ module.exports = {
       require('@tailwindcss/typography'),
   ],
 };
+
+// --background-color; rgb(255, 255, 255);
+//  --header-background-color; rgb(250, 250, 250);
+//  --text-color; rgb(51, 51, 51);
+//  --text-accent-color; rgb(117, 117, 117);
+//  --border-color; rgb(195, 195, 195);
+//  --link-color; rgb(29, 96, 163);
+// --link-hover-color; rgb(29, 163, 136);
+//  --link-hover-line-color; rgb(0, 120, 132);
+//  --icon-hover-color; rgb(29, 163, 136);
+//  --icon-color; rgb(51, 51, 51);
+//  --code-background; rgb(247, 248, 250);
+//  --table-header-background-color; rgb(250, 250, 250);
