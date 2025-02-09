@@ -6,17 +6,23 @@ serve: build
     zola serve
 
 
+deploy-ftp:
+    #!/usr/bin/env -S lftp -f
 
-deploy: build
-    lftp -p 990 -u ecyffers -e "
-    # Set explicit FTPES (FTP over explicit TLS/SSL)
+    # Set connection parameters
+    set ssl:verify-certificate no
     set ftp:ssl-force true
     set ftp:ssl-protect-data true
     set ftp:ssl-auth TLS
-    set ssl:verify-certificate no
-    # Upload the public directory
-    mirror -R public/ /
-    # Exit after transfer
-    exit" perso.ens-lyon.fr
 
+    # Connect to server
+    open -p 990 -u ecyffers perso.ens-lyon.fr
+
+    # Upload commands
+    mirror -R public/ /
+
+    # Exit
+    exit
+
+deploy: build deploy-ftp
     git tag "$(date '+%Y-%m-%d--%H-%M-%S')"
