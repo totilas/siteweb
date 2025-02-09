@@ -8,5 +8,6 @@ serve: build
 
 
 deploy: build
-    rsync -avzn --progress public/ ecyffers@perso.ens-lyon.fr:/home/ecyffers/public_html/
+    read -sp "Password: " FTPPASS && echo
+    cd public && find . -type f -exec curl --ssl-reqd -T {} ftps://perso.ens-lyon.fr/{} --user "ecyffers:$FTPPASS" \;
     git tag "$(date '+%Y-%m-%d--%H-%M-%S')"
