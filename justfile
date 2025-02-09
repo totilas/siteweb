@@ -8,7 +8,5 @@ serve: build
 
 
 deploy: build
-    git add .
-    git commit
     rsync -avzn --progress public/ ecyffers@perso.ens-lyon.fr:/home/ecyffers/public_html/
     git tag "$(date '+%Y-%m-%d--%H-%M-%S')"
