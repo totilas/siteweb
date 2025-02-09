@@ -2,8 +2,8 @@
 title = "Definitions of Algorithms: Computer Science and Law"
 description = "Talk at IHPST seminar on the relationship between data and algorithms induced by differential privacy"
 date = 2021-06-25
+extra.image = "/img/ihpst.jpg"
 +++
-![](/img/ihpst.jpg)
 
 In line with [last year](/projects/2020-12-10-agnostic-science) event, I gave a talk to this [workshop](https://ihpst.pantheonsorbonne.fr/evenements/definitions-algorithms-logic-law). The goal is to widen our understanding of algorithms to face the challenges raised by the diversity of algorithms currently deployed. The discussion between lawyers, logicians, machine learning users and philosophers allows to question our practices and bias in how we define the concept of algorithm.
 
