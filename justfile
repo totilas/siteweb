@@ -7,7 +7,7 @@ serve: build
 
 
 deploy-ftp:
-    #!/usr/bin/env -S lftp -f
+    #!/usr/bin/env -S lftp --verbose -f
 
     # Set connection parameters
     set ssl:verify-certificate no
