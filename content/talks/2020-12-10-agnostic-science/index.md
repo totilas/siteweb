@@ -10,4 +10,4 @@ The recent advances of technology, that make the storage and processing of large
 
 Official page of the conference: [SCAI](https://scai.sorbonne-universite.fr/public/events/view/550617451f1e06ee0093/1)  
 
-[Slides](/pdf/slidesAS.pdf)
+[Slides](./slidesAS.pdf)

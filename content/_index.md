@@ -76,8 +76,8 @@ __Join me__
 I am hiring Master’s interns for this summer, with the possibility of continuing with a PhD afterwards, I have a "Chair Tremplin" to finance it. 
 
 Here is two possible topics:
-- Offer at the intersection of privacy and performative learning, long-term consequences of privacy: [Description](/pdf/stage_perfo_priv.pdf)
-- Offer focused on perfor;ative learning datasets: [Description](/pdf/stage_perfodat.pdf)
+- Offer at the intersection of privacy and performative learning, long-term consequences of privacy: [Description](./stage_perfo_priv.pdf)
+- Offer focused on perforative learning datasets: [Description](./stage_perfodat.pdf)
 - Open topic. If you have already an idea of topic, feel free to propose it. This is how my own PhD started, it is entirely fine if you want to work with me but do not like the offers listed above.
 
 If you are interested by one of these positions, send me an email directly. In France, it is quite usual to send emails for finding a PhD, it is less formal than in many other countries, do not censure yourself.
