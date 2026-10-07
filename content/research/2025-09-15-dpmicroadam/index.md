@@ -1,5 +1,5 @@
 +++
-title= "Fedivertex: a Graph Dataset based on Decentralized Social Networks for Trustworthy Machine Learning"
+title= "DP-MicroAdam: Private and Frugal Algorithm for Training and Fine-tuning"
 date= 2025-09-15
 
 [extra]

@@ -5,7 +5,7 @@ date = 2023-10-01
 +++
 I have the opportunity to talk to several media:
 - A very nice article in [CNRS journal](https://www.ins2i.cnrs.fr/fr/cnrsinfo/edwige-cyffers-vers-des-ia-plus-ethiques)
-- A radio interview, around 20 minutes at [Vivre FM](https://www.vivrefm.com/posts/2023/10/edwige-cyffers-la-vie-privee-et-l-intelligence-artificielle)
+- A radio interview, around 20 minutes at Vivre FM
 - A very [short one](https://www.francebleu.fr/emissions/fier-de-ceux-qui-font-bouger-le-nord-et-le-pas-de-calais) (with sexist comment from the presenter at the end)
 - An [article](https://actu.fr/hauts-de-france/lille_59350/edwige-cyffers-doctorante-a-luniversite-de-lille-recompensee-pour-ses-travaux-sur-lia_60193756.html) more oriented on my experience as women in Science
 - An [article](https://alumni.ens-lyon.fr/fr/article/alice-briole-edwige-cyffers-et-aurora-pignata-prix-jeunes-talents-france-2023-l-oreal-unesco/14/10/2023/262) from the alumni of ENS Lyon

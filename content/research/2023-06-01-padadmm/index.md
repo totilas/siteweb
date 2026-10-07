@@ -9,7 +9,7 @@ date = 2023-06-01
 
     arxiv = "https://arxiv.org/abs/2302.12559"
     code = "https://github.com/totilas/padadmm"
-    slides = "https://slideslive.com/39002791/from-noisy-fixed-point-iterations-to-private-admm-for-centralized-and-federated-learning"
+    url_slides = "https://slideslive.com/39002791/from-noisy-fixed-point-iterations-to-private-admm-for-centralized-and-federated-learning"
     image = "img/admm.png"
 +++
 

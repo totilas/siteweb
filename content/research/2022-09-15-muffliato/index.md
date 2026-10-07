@@ -9,7 +9,7 @@ date = 2022-09-15
 
     arxiv = "https://arxiv.org/abs/2206.05091"
     code = "https://github.com/totilas/muffliato"
-    slides = "https://slideslive.com/38992072/muffliato-peertopeer-privacy-amplification-for-decentralized-optimization-and-averaging"
+    url_slides = "https://slideslive.com/38992072/muffliato-peertopeer-privacy-amplification-for-decentralized-optimization-and-averaging"
 
     image = "img/muffliato.png"
 +++

@@ -5,7 +5,7 @@ date = 2021-06-25
 extra.image = "/img/ihpst.jpg"
 +++
 
-In line with [last year](/projects/2020-12-10-agnostic-science) event, I gave a talk to this [workshop](https://ihpst.pantheonsorbonne.fr/evenements/definitions-algorithms-logic-law). The goal is to widen our understanding of algorithms to face the challenges raised by the diversity of algorithms currently deployed. The discussion between lawyers, logicians, machine learning users and philosophers allows to question our practices and bias in how we define the concept of algorithm.
+In line with [last year](@/talks/2020-12-10-agnostic-science/index.md) event, I gave a talk to this [workshop](https://ihpst.pantheonsorbonne.fr/evenements/definitions-algorithms-logic-law). The goal is to widen our understanding of algorithms to face the challenges raised by the diversity of algorithms currently deployed. The discussion between lawyers, logicians, machine learning users and philosophers allows to question our practices and bias in how we define the concept of algorithm.
 
 __Abstract__
 The recent advances of technology, that make the storage and the processing of large amount of data affordable, drove up the collection of sensitive data. For instance, a smartphone can track its owner position, her sport activity, her messages, her photos, her queries and browsing. Data leakage, malicious or not, is thus a burning issue of the digital era. How can we guarantee privacy, this slippery concept on the fringe of obfuscation, unlinkability, anonymity, confidentiality and data minimization ?

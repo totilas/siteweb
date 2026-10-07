@@ -8,5 +8,5 @@ date= 2025-10-15
 
     arxiv = "https://arxiv.org/abs/2510.12249"
     code = "https://github.com/totilas/regularization-vs-perf"
-    # image = "img/peertube.png"
+    image = "img/reg-versus-perf.png"
 +++

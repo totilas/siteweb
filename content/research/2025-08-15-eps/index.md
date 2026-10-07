@@ -1,5 +1,5 @@
 +++
-title= "Fedivertex: a Graph Dataset based on Decentralized Social Networks for Trustworthy Machine Learning"
+title= "Setting ε is not the Issue in Differential Privacy"
 date= 2025-09-15
 
 [extra]
