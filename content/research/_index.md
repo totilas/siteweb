@@ -24,7 +24,7 @@ More generally, I am interested in the point of view of the user in the federate
 
 __Join the group__
 
-I am lucky to be part of a great team, MILES: feel free to check it out. Postdoc positions regularly open at the PSL level. At the faculty level, we also regularly hire assistant professors (maîtres de conférences), and, like me, you can join the team with a CNRS position. At the PhD level, I plan to hire one or two PhD students per year, so that the group grows slowly to a stable size where I still have time for everyone.
+I am lucky to be part of a great team, [MILES](https://miles.lamsade.fr/): feel free to check it out. Postdoc positions regularly open at the PSL level. At the faculty level, we also regularly hire assistant professors (maîtres de conférences), and, like me, you can join the team with a CNRS position. At the PhD level, I plan to hire one or two PhD students per year, so that the group grows slowly to a stable size where I still have time for everyone.
 
 *Current supervision*
 
