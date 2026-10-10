@@ -53,33 +53,33 @@ interests = [
   link = "mailto:edwige.cyffers AT cnrs.fr"
 +++
 
-**Master internships with PhD afterwards available! (see bottom of this page)**
+**Master's internships and PhD positions available! (see the bottom of this page)**
 
-Since 2026, I am CNRS Researcher at Lamsade at Dauphine University in Paris. I will be a [Research Fellow](https://simons.berkeley.edu/people/audrey-lucienne-cyffers) during the Federated Learning Semester at Berkeley.
+Since 2026, I have been a CNRS researcher at LAMSADE, Paris Dauphine University. This year, I will teach the [Cours Peccot](https://www.college-de-france.fr/fr/prix/cours-et-prix-claude-antoine-peccot) and serve as [NeurIPS Satellite Chair](https://neurips.cc/Conferences/2026/Committees) for Paris.
 
-Previously, I was a Postdoc at [ISTA](https://ista.ac.at/home) working with [Christoph Lampert](https://cvml.ista.ac.at/) and [Marco Mondelli](http://marcomondelli.com/). My PhD was supervised by [Aurélien Bellet](http://researchers.lille.inria.fr/abellet/) in the [Magnet](https://team.inria.fr/magnet/) team, on the topic of *Differential Privacy for Decentralized Learning*, and I was awarded the L’Oréal-UNESCO Young Talents award, the SSFAM PhD award, and the runner-up AFIA PhD award for my doctoral work.
-Before, I was a civil servant for my studies at ENS Lyon in Computer Science. I graduated from a dual-degree programme as a civil engineer at MINES ParisTech. I have a Master’s of Research degree in applied mathematics for machine learning (MVA).
+I was a [Research Fellow](https://simons.berkeley.edu/people/audrey-lucienne-cyffers) during the Federated Learning semester at the Simons Institute in Berkeley.
+Previously, I was a postdoc at [ISTA](https://ista.ac.at/home) working with [Christoph Lampert](https://cvml.ista.ac.at/) and [Marco Mondelli](http://marcomondelli.com/). My PhD was supervised by [Aurélien Bellet](http://researchers.lille.inria.fr/abellet/) in the [Magnet](https://team.inria.fr/magnet/) team, on the topic of *Differential Privacy for Decentralized Learning*, and I was awarded the L’Oréal-UNESCO Young Talents award, the SSFAM PhD award, and the runner-up AFIA PhD award for my doctoral work.
+Before that, I studied Computer Science at ENS Lyon as a civil servant. I graduated as a civil engineer through a dual-degree programme, and I hold a Master’s degree in applied mathematics for machine learning (MVA) and a Master’s degree in Philosophy. I have worked on various science popularization projects, and I hope to keep exploring the philosophical and outreach aspects of machine learning. I am particularly drawn to privacy, fairness, accountability, and regulatory issues in ML from a mathematical point of view.
 
+As a woman in STEM, and more particularly in CS/maths research, I am a firm believer in diversity, and I strive to advocate for it at a personal level by volunteering in projects that promote girls and women in STEM. I take part in many local initiatives and would be happy to join yours! However, if you are looking for a role model, it is now well established that the most effective role models are those closest to the target audience (e.g., undergraduates for high school students, Master's or PhD students for undergraduates). Please also keep in mind that my time and money are limited.
 
-I chose to work on machine learning because of its social impacts and the thrilling idea of learning from high-dimensional data. I graduated with a Master’s Degree in Philosophy at Paris 1 Panthéon Sorbonne. I did various projects for the popularization of science, and I seek to continue exploring the philosophical and outreach aspects of machine learning in the future. I am particularly drawn to privacy, fairness, accountability, and regulatory issues with regard to ML from a mathematical point of view.
+I organized [EGMO 2026](https://www.animath.fr/egmo-2026/) in France. The European Girls’ Mathematical Olympiad is a very high-level international mathematics competition that aims to encourage girls to discover and explore their mathematical talent.
 
-As a woman in STEM, and more particularly in CS/maths research, I am a firm believer in diversity and I strive to advocate at a personal level by volunteering in projects that promote girls and women in STEM. I participate in a lot of local actions, but I currently chose to focus on a big event: [EGMO 2026](https://www.animath.fr/egmo-2026/) in France. The European Girls’ Mathematical Olympiad is an international mathematical contest of a very high level, aiming to encourage girls to discover and explore their mathematical talent. If you are interested in sponsoring the event, please contact me.
+__How to pronounce my name?__
 
-__How to prononce my name?__
-
-I don't care if you have an unusual prononciation, and I am very bad at pronouncing foreign names. 
-You can pronounce my first name as Harry pronounces his owl's name in Harry Potter. For my last name, that's the same prononciation "Il faut Cyffers" and "Il faut s'y faire" in French, and nearly the same for "Cyffers" and "see fair".
+I don't mind if your pronunciation is unusual, and I am very bad at pronouncing foreign names myself.
+You can pronounce my first name the way Harry pronounces his owl's name in Harry Potter. For my last name, "Il faut Cyffers" and "Il faut s'y faire" sound the same in French, and "Cyffers" sounds nearly the same as "see fair".
 
 
 __Join me__
 
-I am hiring Master’s interns for this summer, with the possibility of continuing with a PhD afterwards, I have a "Chair Tremplin" to finance it. 
+I am hiring Master’s interns, with the possibility of continuing with a PhD afterwards; the funding is already secured. Please also read my research page.
 
-Here is two possible topics:
-- Offer at the intersection of privacy and performative learning, long-term consequences of privacy: [Description](./stage_perfo_priv.pdf)
-- Offer focused on perforative learning datasets: [Description](./stage_perfodat.pdf)
-- Open topic. If you have already an idea of topic, feel free to propose it. This is how my own PhD started, it is entirely fine if you want to work with me but do not like the offers listed above.
+Here are some possible topics:
+- Performative learning datasets: [Description](./stage_perfodat.pdf)
+- Exploring the properties of DP algorithms (such as DP-SGD) with tools from ML theory
+- Open topic: if you already have a topic in mind, feel free to propose it. This is how my own PhD started, and it is entirely fine if you want to work with me but do not like the offers above.
 
-If you are interested by one of these positions, send me an email directly. In France, it is quite usual to send emails for finding a PhD, it is less formal than in many other countries, do not censure yourself.
+Last year, I completely failed to answer, or even read with proper care, all the emails I received. So this year I am trying something new: I will recruit through the [ELLIS PhD program](https://ellis.eu/research/phd-postdoc/guidelines-phd-central-recruiting), so please apply there! If you contact me by email (for instance, if you are at ENS or Polytechnique and want an internship while your 4A is still ahead of you), please follow these guidelines.
 
-The email subject line should be: [Internship application] + which topic you are interested in. The email should include what you hope to achieve by doing a PhD, what you can do in maths and in code, which topics interest you among Privacy, Performative Learning, Fairness, Unlearning, Federated Learning, and Decentralized Learning, and optionally the name of a professor who knows you. The whole email should be at most 500 words. I speak French and English.
+The email subject line should be: [Internship application] + the topic you are interested in. The email should include what you hope to achieve by doing a PhD, what you can do in maths and in code, which topics interest you among Privacy, Performative Learning, Fairness, Unlearning, Federated Learning, and Decentralized Learning, and optionally the name of a professor who knows you. The whole email should be at most 500 words. I speak French and English.
