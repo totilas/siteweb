@@ -3,7 +3,7 @@ title = "Homepage"
 [extra]
 
 # Show a concise description of what you do below your avatar.
-title = "CNRS Researcher (CR CNRS) at Dauphine, Paris"
+title = "Permanent CNRS Researcher at Paris Dauphine-PSL"
 
 # The list of interests displayed
 interests = [
@@ -55,7 +55,7 @@ interests = [
 
 **Master's internships and PhD positions available! (see the bottom of this page)**
 
-Since 2026, I have been a CNRS researcher at LAMSADE, Paris Dauphine University. This year, I will teach the [Cours Peccot](https://www.college-de-france.fr/fr/prix/cours-et-prix-claude-antoine-peccot) and serve as [NeurIPS Satellite Chair](https://neurips.cc/Conferences/2026/Committees) for Paris.
+Since 2026, I have been a permanent CNRS researcher (*chargée de recherche*, a tenured position) at LAMSADE, Paris Dauphine-PSL, where I am starting my own group as PI. If you would like to do a PhD under my supervision, see below! This year, I will teach the [Cours Peccot](https://www.college-de-france.fr/fr/prix/cours-et-prix-claude-antoine-peccot) and serve as [NeurIPS Satellite Chair](https://neurips.cc/Conferences/2026/Committees) for Paris.
 
 I was a [Research Fellow](https://simons.berkeley.edu/people/audrey-lucienne-cyffers) during the Federated Learning semester at the Simons Institute in Berkeley.
 Previously, I was a postdoc at [ISTA](https://ista.ac.at/home) working with [Christoph Lampert](https://cvml.ista.ac.at/) and [Marco Mondelli](http://marcomondelli.com/). My PhD was supervised by [Aurélien Bellet](http://researchers.lille.inria.fr/abellet/) in the [Magnet](https://team.inria.fr/magnet/) team, on the topic of *Differential Privacy for Decentralized Learning*, and I was awarded the L’Oréal-UNESCO Young Talents award, the SSFAM PhD award, and the runner-up AFIA PhD award for my doctoral work.
