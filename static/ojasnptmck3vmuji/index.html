@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Ration foin et enrubanné</title>
+<style>
+/* Version légère : une colonne, curseur, résultats, courbe */
+:root {
+  --bg: #f3f5f0;
+  --surface: #ffffff;
+  --ink: #1d2a22;
+  --muted: #5d6b61;
+  --line: #d6ddd3;
+  --hay: #c48a1a;
+  --hay-soft: #f6e7c4;
+  --wrap: #2f5a43;
+  --wrap-soft: #d8e8dc;
+  --good: #2f7a4a;
+  --warn: #a5561c;
+  --font-display: Rockwell, "Roboto Slab", Georgia, serif;
+  --font-body: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #141a16; --surface: #1c241f; --ink: #e6ece6; --muted: #9aa89e; --line: #2f3a33;
+    --hay: #e3ab3f; --hay-soft: #3a2f17; --wrap: #7fbf96; --wrap-soft: #1f3a2a;
+    --good: #7fcf9a; --warn: #f0a86a; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #141a16; --surface: #1c241f; --ink: #e6ece6; --muted: #9aa89e; --line: #2f3a33;
+  --hay: #e3ab3f; --hay-soft: #3a2f17; --wrap: #7fbf96; --wrap-soft: #1f3a2a;
+  --good: #7fcf9a; --warn: #f0a86a; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 15px; line-height: 1.5; }
+.wrap {
+  max-width: 900px; margin: 0 auto; padding-block: 28px 48px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid; gap: 24px;
+}
+header { display: grid; gap: 4px; }
+h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(28px, 4vw, 40px); line-height: 1.1; margin: 0; text-wrap: balance; }
+h2 { font-family: var(--font-display); font-weight: 700; font-size: 22px; margin: 0; text-wrap: balance; }
+.label { font-size: 11.5px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; }
+td, b { font-variant-numeric: tabular-nums; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 20px; display: grid; gap: 18px; min-width: 0; }
+
+.slider-wrap { display: grid; gap: 8px; }
+.ends { display: flex; justify-content: space-between; gap: 12px; font-size: 13px; color: var(--muted); }
+input[type="range"] { width: 100%; accent-color: var(--wrap); height: 28px; margin: 0; }
+input:focus-visible { outline: 2px solid var(--hay); outline-offset: 2px; }
+.mixbar { height: 34px; border-radius: 6px; overflow: hidden; display: flex; font-size: 13px; font-weight: 700; background: var(--line); }
+.mixbar span { display: flex; align-items: center; padding: 0 10px; white-space: nowrap; overflow: hidden; transition: width .15s; }
+.mixbar .h { background: var(--hay); color: #241a05; }
+.mixbar .e { background: var(--wrap); color: var(--surface); justify-content: flex-end; }
+.mixbar span:empty { padding: 0; }
+@media (prefers-reduced-motion: reduce) { .mixbar span { transition: none; } }
+
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+.costs { width: 100%; border-collapse: collapse; }
+.costs th, .costs td { padding: 6px 0 6px 10px; text-align: right; }
+.costs th:first-child, .costs td:first-child { text-align: left; padding-left: 0; }
+.costs thead th { font-size: 11.5px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; border-bottom: 1px solid var(--line); }
+.costs tbody td { border-bottom: 1px solid var(--line); }
+.costs tbody tr:last-child td { border-bottom: 0; }
+.costs .big { font-size: 19px; font-weight: 700; }
+.costs .lbl { font-size: 13.5px; color: var(--muted); }
+
+.stock { background: var(--bg); border-radius: 8px; padding: 12px; display: grid; gap: 8px; align-content: start; }
+.stock-row { display: flex; justify-content: space-between; gap: 10px; font-size: 13.5px; }
+
+@media (max-width: 640px) { .field { display: grid; grid-template-columns: minmax(0, 1fr) 90px; align-items: center; gap: 10px; font-size: 13.5px; }
+input[type="number"] {
+  width: 100%; font: inherit; font-variant-numeric: tabular-nums; text-align: right;
+  padding: 6px 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink);
+}
+#chart { width: 100%; height: auto; display: block; }
+.field.ratio { max-width: 380px; margin-bottom: 6px; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <span class="label">18 chevaux · enrubanné 11,50 € le sac de 20 kg dès 282 sacs, sinon 13 €</span>
+    <h1>Ration foin et enrubanné</h1>
+  </header>
+
+  <section class="panel" aria-label="Ration">
+    <div class="slider-wrap">
+      <div class="field ratio"><label for="ratio">1 kg d'enrubanné remplace (kg de foin)</label><input id="ratio" type="number" min="0.5" max="3" step="0.1" value="1.5"></div>
+      <div class="field ratio"><label for="hayPrice">Prix du foin (€ la tonne)</label><input id="hayPrice" type="number" min="0" step="5" value="230"></div>
+      <div class="ends"><span>15 kg de foin</span><span id="endMax"></span></div>
+      <input id="slider" type="range" min="0" max="60" step="1" value="30" aria-label="Kilos d'enrubanné par cheval et par jour">
+      <div class="mixbar" aria-hidden="true"><span class="h" id="barH"></span><span class="e" id="barE"></span></div>
+    </div>
+
+    <div class="grid2">
+      <table class="costs">
+        <thead><tr><th></th><th>Par jour</th><th>Par mois</th></tr></thead>
+        <tbody>
+          <tr><td class="lbl">Par cheval</td><td id="cHd"></td><td id="cHm"></td></tr>
+          <tr><td class="lbl">18 chevaux</td><td class="big" id="cTd"></td><td class="big" id="cTm"></td></tr>
+        </tbody>
+      </table>
+      <div class="stock" id="stock"></div>
+    </div>
+  </section>
+
+  <section class="panel" aria-labelledby="chartTitle">
+    <h2 id="chartTitle">Coût mensuel, 18 chevaux</h2>
+    <svg id="chart" role="img" aria-label="Coût mensuel selon la quantité d'enrubanné"></svg>
+  </section>
+
+</div>
+
+<script>
+(function () {
+  const HORSES = 18, BAG_KG = 20, BAG_LOW = 11.5, BAG_HIGH = 13, THRESHOLD = 282;
+  let HAY_PRICE = 230;
+  const HAY_DENSITY = 150; // kg/m³, foin en bottes empilées (estimation grossière)
+  const MONTHS = 6, PER_STACK = 47;
+  const BASE_HAY = 15, WRAP_CAP = 6;
+  let RATIO = 1.5, WRAP_MAX = 6; // 1 kg d'enrubanné remplace RATIO kg de foin
+  const DAYS_PER_MONTH = 365 / 12, STOCK_DAYS = MONTHS * DAYS_PER_MONTH;
+
+  const eur = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const eur0 = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
+  const n0 = new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 0 });
+  const n1 = new Intl.NumberFormat('fr-FR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+
+  const $ = id => document.getElementById(id);
+  const num = (id, fb, lo, hi) => { const v = parseFloat($(id).value); return isFinite(v) ? Math.min(hi, Math.max(lo, v)) : fb; };
+
+  try {
+    const r = localStorage.getItem('ration-ratio'); if (r !== null) $('ratio').value = r;
+    const hp = localStorage.getItem('ration-hay-price'); if (hp !== null) $('hayPrice').value = hp;
+    const p = localStorage.getItem('ration-pos'); if (p !== null) $('slider').value = p;
+  } catch (e) {}
+
+  const ration = wrap => ({ hay: Math.max(0, BASE_HAY - wrap * RATIO), wrap });
+
+  function costs(r) {
+    const bags = Math.ceil(r.wrap * HORSES * STOCK_DAYS / BAG_KG - 1e-9);
+    const bagPrice = bags >= THRESHOLD ? BAG_LOW : BAG_HIGH;
+    const hayDay = r.hay * HAY_PRICE / 1000, wrapDay = r.wrap * bagPrice / BAG_KG;
+    const day = hayDay + wrapDay;
+    return { bags, bagPrice, day, month: day * DAYS_PER_MONTH, stock: hayDay * HORSES * STOCK_DAYS + bags * bagPrice };
+  }
+
+  const PILES_PER_BOX = 5; // 5 piles de 47 sacs par box
+
+  function update() {
+    RATIO = num('ratio', 1.5, 0.5, 3);
+    HAY_PRICE = num('hayPrice', 230, 0, 10000);
+    WRAP_MAX = Math.min(WRAP_CAP, Math.floor(BASE_HAY / RATIO * 10) / 10);
+    $('slider').max = Math.round(WRAP_MAX * 10);
+    $('endMax').textContent = `${n1.format(WRAP_MAX)} kg d'enrubanné + ${n1.format(Math.max(0, BASE_HAY - WRAP_MAX * RATIO))} kg de foin`;
+    const r = ration(Math.min(WRAP_MAX, +$('slider').value / 10));
+    const c = costs(r);
+
+    const tot = r.hay + r.wrap || 1;
+    $('barH').style.width = (r.hay / tot * 100) + '%';
+    $('barE').style.width = (r.wrap / tot * 100) + '%';
+    $('barH').textContent = r.hay > 0 ? `Foin ${n1.format(r.hay)} kg` : '';
+    $('barE').textContent = r.wrap > 0 ? `Enrubanné ${n1.format(r.wrap)} kg` : '';
+
+    $('cHd').textContent = eur.format(c.day);
+    $('cHm').textContent = eur.format(c.month);
+    $('cTd').textContent = eur.format(c.day * HORSES);
+    $('cTm').textContent = eur0.format(c.month * HORSES);
+
+    const piles = Math.ceil(c.bags / PER_STACK);
+    const boxes = Math.ceil(piles / PILES_PER_BOX);
+    $('stock').innerHTML = `
+      <span class="label">Stock 6 mois</span>
+      <div class="stock-row"><span>Foin</span><b>${n1.format(r.hay * HORSES * STOCK_DAYS / 1000)} t · ≈ ${n0.format(r.hay * HORSES * STOCK_DAYS / HAY_DENSITY)} m³</b></div>
+      <div class="stock-row"><span>Enrubanné</span><b>${n0.format(c.bags)} sacs${r.wrap ? ` à ${eur.format(c.bagPrice)}` : ''}</b></div>
+      <div class="stock-row"><span>Piles de 47 sacs</span><b>${n0.format(piles)}</b></div>
+      <div class="stock-row"><span>Box (5 piles par box)</span><b>${n0.format(boxes)}</b></div>
+      <div class="stock-row"><span>Coût total</span><b>${eur0.format(c.stock)}</b></div>`;
+
+    drawChart(r);
+    try { localStorage.setItem('ration-pos', $('slider').value); localStorage.setItem('ration-ratio', $('ratio').value); localStorage.setItem('ration-hay-price', $('hayPrice').value); } catch (e) {}
+  }
+
+  const cssVar = k => getComputedStyle(document.documentElement).getPropertyValue(k).trim();
+
+  function drawChart(cur) {
+    const W = 640, H = 240, m = { l: 70, r: 20, t: 22, b: 42 };
+    const muted = cssVar('--muted'), line = cssVar('--line'), wrap = cssVar('--wrap'), hay = cssVar('--hay'), ink = cssVar('--ink');
+    const pts = [];
+    const N = Math.round(WRAP_MAX * 10);
+    for (let i = 0; i <= N; i++) { const c = costs(ration(i / 10)); pts.push({ w: i / 10, y: c.month * HORSES, price: c.bagPrice }); }
+    const lo = 1800, hi = 3500; // axe fixe
+    const X = w => m.l + (w / WRAP_MAX) * (W - m.l - m.r);
+    const Y = v => m.t + (1 - (v - lo) / (hi - lo)) * (H - m.t - m.b);
+    let svg = '';
+    for (const v of [1800, 2000, 2200, 2400, 2600, 2800, 3000, 3200, 3500]) {
+      svg += `<line x1="${m.l}" x2="${W - m.r}" y1="${Y(v)}" y2="${Y(v)}" stroke="${line}" stroke-width="1"/>`;
+      svg += `<text x="${m.l - 8}" y="${Y(v) + 4}" text-anchor="end" font-size="12" fill="${muted}">${eur0.format(v)}</text>`;
+    }
+    for (let w = 0; w <= WRAP_MAX + 1e-9; w++) svg += `<text x="${X(w)}" y="${H - m.b + 18}" text-anchor="middle" font-size="12" fill="${muted}">${w}</text>`;
+    svg += `<text x="${(m.l + W - m.r) / 2}" y="${H - 4}" text-anchor="middle" font-size="12" fill="${muted}">kg d'enrubanné par cheval et par jour</text>`;
+    let d = '';
+    pts.forEach((p, i) => {
+      const jump = i > 0 && pts[i - 1].w > 0 && pts[i - 1].price !== p.price;
+      d += (i === 0 || jump ? 'M' : 'L') + X(p.w).toFixed(1) + ' ' + Y(p.y).toFixed(1) + ' ';
+    });
+    svg += `<defs><clipPath id="plotClip"><rect x="${m.l}" y="${m.t - 8}" width="${W - m.l - m.r + 8}" height="${H - m.t - m.b + 16}"/></clipPath></defs>`;
+    svg += `<path clip-path="url(#plotClip)" d="${d}" fill="none" stroke="${wrap}" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>`;
+    const v = costs(cur).month * HORSES, cx = X(cur.wrap), cy = Y(Math.min(hi, Math.max(lo, v)));
+    svg += `<line x1="${cx}" x2="${cx}" y1="${m.t}" y2="${H - m.b}" stroke="${hay}" stroke-width="1.5" stroke-dasharray="4 4"/>`;
+    svg += `<circle cx="${cx}" cy="${cy}" r="6" fill="${hay}" stroke="${cssVar('--surface')}" stroke-width="2"/>`;
+    const lx = Math.min(Math.max(cx, m.l + 40), W - m.r - 40), ly = cy - 12 < m.t + 4 ? cy + 22 : cy - 12;
+    svg += `<text x="${lx}" y="${ly}" text-anchor="middle" font-size="13" font-weight="700" fill="${ink}">${eur0.format(v)}</text>`;
+    $('chart').setAttribute('viewBox', `0 0 ${W} ${H}`);
+    $('chart').setAttribute('font-family', 'Public Sans, sans-serif');
+    $('chart').innerHTML = svg;
+  }
+
+  ['slider', 'ratio', 'hayPrice'].forEach(id => $(id).addEventListener('input', update));
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change', update);
+  new MutationObserver(update).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  update();
+})();
+</script>
+</body>
+</html>
