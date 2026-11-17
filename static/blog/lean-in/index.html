@@ -1,0 +1,784 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Results automatically formalized: time to Lean
+in? | Edwige Cyffers</title>
+<meta name="description" content="How I formalized a differential
+privacy paper in Lean with an LLM: setup, prompt, and a guided reading
+of the definitions and theorems.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg-soft: #fafafa;
+    --code-bg: #f7f8fa;
+    --text: #333333;
+    --muted: #757575;
+    --border: #c3c3c3;
+    --border-soft: #e5e7eb;
+    --link: rgb(29, 96, 163);
+    --link-hover: rgb(29, 163, 136);
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: 1.5rem; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font: 18px/1.65 "Source Serif 4", Georgia, serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--link); text-decoration: none; border-bottom: 1px solid transparent; }
+  a:hover { color: var(--link-hover); border-bottom-color: var(--link-hover); }
+
+  /* Site header, matching cyffers.fr */
+  .site-header { box-shadow: 0 2px 4px rgba(0,0,0,.08); background: var(--bg); }
+  .site-header .inner {
+    max-width: 72rem; margin: 0 auto; padding: .75rem 1rem;
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: Inter, system-ui, sans-serif; font-size: .9rem;
+  }
+  .site-header .home { color: #111; font-weight: 800; border: 0; }
+  .site-header .back { color: var(--muted); }
+
+  /* Layout: sticky table of contents beside the article */
+  .layout {
+    max-width: 72rem; margin: 0 auto; padding: 2rem 1rem 4rem;
+    display: grid; grid-template-columns: 15rem minmax(0, 46rem); gap: 3rem;
+    justify-content: center;
+  }
+  nav.toc {
+    position: sticky; top: 1.5rem; align-self: start;
+    max-height: calc(100vh - 3rem); overflow-y: auto;
+    font-family: Inter, system-ui, sans-serif; font-size: .85rem; line-height: 1.4;
+  }
+  nav.toc .toc-title {
+    font-weight: 600; text-transform: uppercase; letter-spacing: .06em;
+    font-size: .72rem; color: var(--muted); margin: 0 0 .75rem;
+  }
+  nav.toc ul { list-style: none; margin: 0; padding: 0; }
+  nav.toc ul ul { padding-left: .9rem; margin: .25rem 0 .4rem; }
+  nav.toc li { margin: .3rem 0; }
+  nav.toc a {
+    color: var(--muted); display: block; border: 0;
+    border-left: 2px solid transparent; padding-left: .6rem; margin-left: -.6rem;
+  }
+  nav.toc a:hover { color: var(--text); }
+  nav.toc a.active { color: var(--link); border-left-color: var(--link); }
+
+  /* Article */
+  article { min-width: 0; }
+  article h1.title {
+    font-family: Inter, system-ui, sans-serif; font-weight: 800;
+    font-size: 2.1rem; line-height: 1.2; color: #111; margin: 0 0 .5rem;
+  }
+  .byline { font-family: Inter, system-ui, sans-serif; color: var(--muted); font-size: .9rem; margin: 0 0 2rem; padding-bottom: 1.25rem; border-bottom: 1px solid var(--border-soft); }
+  article h2, article h3 { font-family: Inter, system-ui, sans-serif; color: #111; line-height: 1.3; }
+  article h2 { font-size: 1.5rem; margin: 3rem 0 1rem; }
+  article h3 { font-size: 1.15rem; margin: 2.2rem 0 .8rem; }
+  article p, article li { hyphens: auto; }
+  article ul { padding-left: 1.3rem; }
+  article li { margin: .35rem 0; }
+  blockquote {
+    margin: 1.5rem 0; padding: .25rem 1.25rem; color: #444;
+    border-left: 3px solid var(--border-soft); background: var(--bg-soft);
+  }
+  code {
+    font-family: "JuliaMono", "DejaVu Sans Mono", Menlo, Consolas, monospace;
+    font-size: .82em; background: var(--code-bg); padding: .1em .3em; border-radius: 3px;
+  }
+  pre {
+    background: var(--code-bg); border: 1px solid var(--border-soft); border-radius: 6px;
+    padding: 1rem 1.1rem; overflow-x: auto; line-height: 1.5; margin: 1.25rem 0;
+  }
+  pre code { background: none; padding: 0; font-size: .8rem; }
+  del { color: var(--muted); }
+
+  /* Lean syntax colours (One Light palette) */
+  pre.lean .lean-kw { color: #a626a4; }
+  pre.lean .lean-const { color: #c18401; }
+  pre.lean .lean-sort { color: #0184bc; }
+  pre.lean .lean-op { color: #0184bc; }
+  pre.lean .lean-number { color: #986801; }
+  pre.lean .lean-string { color: #50a14f; }
+  pre.lean .lean-comment { color: #8e8f96; font-style: italic; }
+  pre.lean .lean-sorry { color: #e45649; font-weight: 600; }
+
+  /* Maths (KaTeX) */
+  .katex { font-size: 1.05em; }
+  .katex-display { overflow-x: auto; overflow-y: hidden; padding: .2rem 0; }
+
+  /* Collapsible blocks (full prompt, long Lean code) */
+  details.fold {
+    margin: 1.25rem 0; border: 1px solid var(--border-soft); border-radius: 6px;
+    background: var(--bg-soft);
+  }
+  details.fold > summary {
+    cursor: pointer; list-style: none; padding: .7rem 1rem;
+    font-family: Inter, system-ui, sans-serif; font-size: .88rem; font-weight: 600;
+    color: var(--link); display: flex; align-items: center; gap: .55rem;
+  }
+  details.fold > summary::-webkit-details-marker { display: none; }
+  details.fold > summary::before {
+    content: ""; width: .45rem; height: .45rem; flex: none;
+    border-right: 2px solid currentColor; border-bottom: 2px solid currentColor;
+    transform: rotate(-45deg); transition: transform .15s;
+  }
+  details.fold[open] > summary::before { transform: rotate(45deg); }
+  details.fold > summary:hover { color: var(--link-hover); }
+  details.fold > summary .meta { color: var(--muted); font-weight: 400; }
+  details.fold > .fold-body { padding: .2rem 1.1rem .4rem; border-top: 1px solid var(--border-soft); background: var(--bg); border-radius: 0 0 6px 6px; }
+  details.fold > pre { margin: 0; border: 0; border-top: 1px solid var(--border-soft); border-radius: 0 0 6px 6px; }
+
+  .diagram { margin: 1.5rem 0; text-align: center; overflow-x: auto; }
+  pre.mermaid { background: none; border: 0; padding: 0; }
+
+  .to-top {
+    position: fixed; right: 1.25rem; bottom: 1.25rem; width: 2.5rem; height: 2.5rem;
+    border-radius: 50%; border: 1px solid var(--border-soft); background: var(--bg);
+    box-shadow: 0 2px 6px rgba(0,0,0,.1); color: var(--muted);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none; transition: opacity .2s;
+    font: 1.1rem Inter, system-ui, sans-serif;
+  }
+  .to-top.visible { opacity: 1; pointer-events: auto; }
+  .to-top:hover { color: var(--link-hover); border-color: var(--link-hover); }
+
+  /* Narrow screens: contents become a collapsible box above the article */
+  @media (max-width: 960px) {
+    .layout { grid-template-columns: minmax(0, 1fr); gap: 0; padding-top: 1.25rem; }
+    nav.toc {
+      position: static; max-height: none; margin-bottom: 1.5rem;
+      border: 1px solid var(--border-soft); border-radius: 6px; background: var(--bg-soft);
+    }
+    nav.toc details > summary { padding: .7rem 1rem; cursor: pointer; }
+    nav.toc details > ul { padding: 0 1rem .8rem 1.6rem; }
+    nav.toc .toc-title { display: inline; }
+    body { font-size: 17px; }
+    article h1.title { font-size: 1.7rem; }
+  }
+  @media (min-width: 961px) {
+    nav.toc details > summary { list-style: none; pointer-events: none; }
+    nav.toc details > summary::-webkit-details-marker { display: none; }
+  }
+</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="inner">
+    <a class="home" href="https://cyffers.fr">Edwige Cyffers</a>
+    <a class="back" href="https://cyffers.fr">← Back to the website</a>
+  </div>
+</header>
+
+<div class="layout">
+  <nav class="toc" aria-label="Contents">
+    <details open>
+      <summary><span class="toc-title">Contents</span></summary>
+<ul>
+<li><a href="#intro">Introduction</a></li>
+<li><a href="#before-starting" id="toc-before-starting">Before
+starting</a></li>
+<li><a href="#formalizing-my-paper"
+id="toc-formalizing-my-paper">Formalizing my paper</a>
+<ul>
+<li><a href="#choosing-the-paper" id="toc-choosing-the-paper">Choosing
+the paper</a></li>
+<li><a href="#prompting-the-llm" id="toc-prompting-the-llm">Prompting
+the LLM</a></li>
+<li><a href="#going-through-the-definitions"
+id="toc-going-through-the-definitions">Going through the
+definitions</a></li>
+<li><a href="#going-deeper" id="toc-going-deeper">Going deeper</a></li>
+</ul></li>
+<li><a href="#what-next" id="toc-what-next">What next?</a></li>
+</ul>
+    </details>
+  </nav>
+
+  <article>
+    <h1 class="title" id="intro">Results automatically formalized: time
+to Lean in?</h1>
+    <p class="byline">Edwige Cyffers</p>
+<p>I was exposed to proof assistants quite early. Gender bias at work: I
+knew nothing about computer science before starting my studies, and I
+first learned algorithms through pseudo-code. In 2017, when I entered
+ENS Lyon and joined the CS department, I had to learn how to write code
+quite quickly. The very same year, I took a course on proof assistants
+and had to write proofs in Coq (since then renamed Rocq, for obvious
+reasons). I loved the concept, but this first experience was awful. I
+distinctly remember wasting my Saturday night trying to formally prove
+that the successor of an odd number is even, and similarly obvious
+facts. The software crashed whenever I made a syntax mistake
+(e.g. forgetting the dot at the end of a statement). I saw no future
+there, and gave up.</p>
+<p>Instead of being sure to be correct while accomplishing nothing, I
+moved to machine learning, where you are never sure but somehow it works
+most of the time. Of course, there is a long history of attempts to
+bridge symbolic AI and machine learning, two communities that could get
+the best of both worlds but usually fail to find a useful way to combine
+them, so formal proofs remained a distant dream. I was still curious
+about them, and in 2020 I even accepted a paid job that turned out to be
+translating LaTeX into Lean. I came out of this second experience even
+more suspicious of the field: Lean was broken a bit everywhere at the
+time, so any RL system would first find a bug, prove False, and then
+deduce the theorem from it. So once again, I put it back on the shelf of
+nice ideas that, so far, fail when you try to implement them.</p>
+<p>Fortunately, more ambitious people kept believing in the idea and
+made it work. It turns out that even if writing proofs in Lean is still
+mostly unbearable for the average human being, LLMs are fluent in this
+language as well. So this late spring, using them to check my own math
+results became a real temptation.</p>
+<p>Thanks to a first generous anonymous donor, I started formalizing one
+of my old papers. The LLM came back with many extremely precise
+questions: it was the best review I have had in my life. While
+co-authors usually understand the main ideas but keep ignoring some
+small details, the LLM was to the point, understood the technical
+difficulties, and even found real inaccuracies (which I was aware of,
+but which no reviewer had ever pointed out). At that point, I decided
+that Lean was a good skill, i.e. a good way to force the LLM not to be
+lazy and to actually produce good mathematical discussions.</p>
+<p>Unfortunately, at that point the first generous LLM access was
+revoked, and the experiment stopped (yes, I have not been selected for
+any of the academic LLM programs I have applied to so far, and I have no
+way to pay for a Max subscription with my research funding). However, at
+the same time, I was working on a paper with Juba Ziani whose proofs
+were mostly self-contained, simple and rather elegant: they were calling
+for a Lean formalization. Fable was released, and I had access to enough
+tokens to give it a first shot. Not enough to finish, but the structure
+was there, and I was fortunate to find a second generous anonymous
+donor. Shortly after, Opus 5.5 was released and finished the work
+effortlessly (i.e. hitting my token limits only a few times). So I
+decided to share this experience, in the hope that <del>someone finally
+gives me a free subscription</del> it can help other researchers who
+would like to give it a try but do not know how to start, and imagine,
+out of ignorance, that it is complicated.</p>
+<p>I don’t know which works are the most interesting to check. My guess
+is that if you want to reach out to the Lean community, the best place
+is Zulip: <a href="https://leanprover.zulipchat.com"
+class="uri">https://leanprover.zulipchat.com</a>. Some references that
+seem hard to avoid:</p>
+<ul>
+<li>the <strong>Fermat’s Last Theorem</strong> project (ongoing): <a
+href="https://imperialcollegelondon.github.io/FLT/"
+class="uri">https://imperialcollegelondon.github.io/FLT/</a></li>
+<li>the <strong>Liquid Tensor Experiment</strong> (2021–2022), which
+checked a central theorem of Clausen–Scholze condensed mathematics at
+Scholze’s request;</li>
+<li>the <strong>Polynomial Freiman–Ruzsa conjecture</strong> (Gowers,
+Green, Manners, Tao), whose proof was formalized in about three weeks
+after the preprint appeared: <a href="https://teorth.github.io/pfr/"
+class="uri">https://teorth.github.io/pfr/</a></li>
+<li><strong>OpenAI’s massive dump</strong>: <a
+href="https://github.com/openai/math/blob/main/overview.pdf"
+class="uri">https://github.com/openai/math/blob/main/overview.pdf</a></li>
+<li>a <strong>critical analysis of the Lean proof of the Navier–Stokes
+result</strong>, showing that two of its lemmas do not match the written
+proof: <a href="https://arxiv.org/abs/2610.08144"
+class="uri">https://arxiv.org/abs/2610.08144</a></li>
+<li>Kevin Buzzard’s post on what “the proof is checked in Lean” should
+mean, and what to check before believing it: <a
+href="https://xenaproject.wordpress.com/2026/11/12/and-the-proof-is-checked-in-lean/"
+class="uri">https://xenaproject.wordpress.com/2026/11/12/and-the-proof-is-checked-in-lean/</a></li>
+<li>a Lean formalization of the deductive structure of a claimed proof
+of the Riemann Hypothesis, which its README states is conditional on an
+unproved input: <a
+href="https://github.com/startigerjln/Nielsen-and-Semita-Riemann-Proof-in-Lean4/"
+class="uri">https://github.com/startigerjln/Nielsen-and-Semita-Riemann-Proof-in-Lean4/</a>.</li>
+</ul>
+<h2 id="before-starting">Before starting</h2>
+<p>Lean takes a lot of space, and I don’t fully understand why. So
+delete a few old movies from your computer if you don’t want to
+experience the bad scenario of your LLM filling up your disk and getting
+stuck because nothing can move anymore. Apart from that, installing Lean
+is quite easy, and your LLM, knowing your configuration, will likely be
+more helpful than I am.</p>
+<p>It is important to understand that Lean relies on the trick that a
+proof is exactly a program, which means that the proof is correct if the
+Lean code compiles and contains no <code>sorry</code> (the placeholder
+for a missing proof, which Lean accepts with a mere warning). The proof
+is written in <code>.lean</code> files. After compilation, you get
+<code>.olean</code> files. To avoid re-checking all the maths, you can
+use the cache of the proofs already compiled in the library. In other
+words, running</p>
+<pre class="bash"><code>lake exe cache get</code></pre>
+<p>makes it much faster. Lake is Lean’s build tool and package manager.
+VS Code has an extension (its symbol is ∀) that starts a Lean server and
+shows you whether the proof is correct or not. Overall, this interface
+has worked well for me so far, except that it can take time to run.
+Luckily, most of the interactions were done directly by the LLM.</p>
+<h2 id="formalizing-my-paper">Formalizing my paper</h2>
+<h3 id="choosing-the-paper">Choosing the paper</h3>
+<p>During my semester at the Simons Institute, I was puzzled by how many
+smart people were working at the intersection of privacy and data
+markets, often using heterogeneous privacy budgets. I was not at all
+convinced by the idea, but a gut feeling is not a math proof, and I did
+not know where to start to test whether it was a bad idea or not. Over
+our discussions, it became clear to me that what matters is to pick a
+reasonable epsilon that covers a good proportion of the use cases, but
+it was still not quite there. Luckily, Juba was convinced that it would
+be a fun project.</p>
+<p>This ended up as <a href="https://arxiv.org/abs/2605.13503">this fun
+paper</a> (the code is <a
+href="https://github.com/totilas/limites-personalizing-epsilon">on
+GitHub</a>), which compares the best affine estimator to a
+single-threshold estimator. In short, the affine estimator takes
+advantage of all the distinct privacy budgets to suck as much as
+possible out of the data, whereas the single-threshold operator picks
+the smartest epsilon, gives that level to all the people who are
+satisfied with it, and ignores the rest of the users. This was a good
+candidate for a Lean proof for several reasons:</p>
+<ul>
+<li><strong>The theorems actually matter.</strong> That was the first
+objection I got from a researcher I really like: are you doing maths
+serious enough for this to be worth it? I looked offended, but I was
+not. I agree that most of my theorems are pretty much useless: their
+goal is mostly to introduce precisely enough the phenomena and
+algorithms I develop, and if some hypotheses are missing or some
+constant gets lost in a convergence rate that does not seem tight
+anyway, I don’t really think it makes a difference. Some of my theorems
+are indeed there for illustrative purposes. In this paper, in contrast,
+the exact values of the constants are interesting. On the other hand,
+the proof techniques are not that advanced or interesting, so skipping
+the proofs does not significantly hinder understanding. Or at least, I
+can see how the results can be interesting for people who cannot read
+the proofs.</li>
+<li><strong>The math is easy.</strong> Otherwise, it would not be a
+problem for the LLM, but it would be for me. In my previous experiment,
+I ended up in a technical discussion about adaptivity in DP proofs, and
+as I mainly use adaptivity results in DP as a black box, I was not sure
+what to answer the LLM.</li>
+</ul>
+<h3 id="prompting-the-llm">Prompting the LLM</h3>
+<p>This part is likely to change. As is clear from the introduction, I
+did not use a single prompt, and I don’t have my prompts anymore, so I
+went in reverse and asked Claude for its best prompt given what we have,
+which I copy verbatim, including what to do next. It is likely a better
+prompt than what I did, but the key points remain:</p>
+<ul>
+<li>no <code>sorry</code></li>
+<li>actually run Lean, don’t just hallucinate whether it works or
+not</li>
+<li>give me a clear correspondence with the paper.</li>
+</ul>
+<details class="fold"><summary>Show the full prompt <span class="meta">(46 lines)</span></summary><pre class="text"><code>Formalize the paper in &lt;path to PDF/tex&gt; in Lean 4 + Mathlib, in a new Lake project
+under lean/ (Mathlib version: &lt;pin, or latest stable&gt;).
+
+Goal: every formal claim of the paper (theorems, propositions, lemmas, corollaries,
+and the mathematical content of remarks and examples) has a Lean counterpart.
+
+Statements
+- Each Lean statement must be at least as strong as the paper&#39;s claim: same
+  conclusion, no extra hypotheses. Where the paper leaves a hypothesis implicit
+  (measurability, integrability, nonemptiness, n ≥ 1…), state it explicitly and
+  list it in the README.
+- Proofs may differ from the paper&#39;s.
+- When a result is about concrete objects (mechanisms, estimators, algorithms),
+  prove it for those objects, not only for an abstract formula. Link the two
+  explicitly (e.g. &quot;the MSE of this mechanism equals this formula&quot;).
+- Prefer generic statements when the paper reuses an argument (state it once with
+  parameters, then instantiate).
+
+Definitions
+- Reuse Mathlib whenever it has the notion. Before defining something yourself,
+  search Mathlib and the main Lean libraries in the area, and tell me what exists.
+- For each definition written from scratch, show it next to the paper&#39;s
+  definition. Where an independent formalization exists, propose a bridge lemma
+  proving the two agree.
+- Name variables so they don&#39;t suggest a different mathematical object than the
+  paper&#39;s (e.g. a law vs a random variable).
+
+Structure
+- One file per section of the paper, in the paper&#39;s order. Docstrings cite the
+  paper&#39;s PDF numbering (Theorem 2, Lemma 3…), never LaTeX labels.
+
+Quality bar
+- No sorry, no new axioms. `#print axioms` on the main theorems shows only
+  propext, Classical.choice, Quot.sound.
+- `lake build` passes with no errors. Actually run Lean; don&#39;t reason about
+  whether the code would compile.
+- Don&#39;t stop until every claim is covered or explicitly listed as not covered,
+  with the reason.
+
+Deliverables
+- README: a disclaimer (the paper&#39;s correctness rests on its written proofs; this
+  is a complementary machine check), scope, build instructions, and per-file
+  tables &quot;Paper (PDF numbering) | Lean name&quot;.
+- A final report: what is covered, what isn&#39;t, every place where the Lean statement
+  differs from the paper (stronger, more general, extra explicit hypothesis), and
+  any errors found in the paper.</code></pre></details>
+<details class="fold"><summary>Claude also added three practical notes</summary><div class="fold-body"><ul>
+<li>Attach the PDF as well as the tex, so the numbering matches what
+readers see.</li>
+<li>Ask for the Mathlib/library survey first, before any code. That is
+when decisions like SampCert vs from scratch should be made, not
+afterwards.</li>
+<li>For a long paper, split the work by section across sessions, and run
+a final pass that checks the README tables against the paper.</li>
+</ul></div></details>
+<h3 id="going-through-the-definitions">Going through the
+definitions</h3>
+<p>From here on, it is hard to stay generic, and as I have nothing
+against advertising my own research, you might become familiar with my
+paper if you keep reading! The structure of the paper is quite simple.
+It recalls the usual definition of heterogeneous DP and the mean squared
+error we want to minimize, defines the baseline affine operator and how
+it simplifies in some cases, introduces our estimator, and then proves
+that our estimator is quite good compared to the baseline. Then we show
+some illustrative theorems to argue that the finding matters, as it
+transfers from mean estimation to DP-SGD.</p>
+<p>The Lean structure thus mimics the paper’s structure. Here is
+Claude’s diagram of it: the formalization has about 5,000 lines in
+twelve files, organized in four layers.</p>
+<div class="diagram"><pre class="mermaid">flowchart TB
+  subgraph Definitions
+    R[&quot;Risks&lt;br/&gt;𝓡_pers, 𝓡_thr&quot;]
+    D[&quot;Privacy/Defs&lt;br/&gt;DP, heterogeneous DP&quot;]
+    L[&quot;Laplace&lt;br/&gt;(built from scratch)&quot;]
+    Y[&quot;Renyi&lt;br/&gt;Rényi divergence, zCDP&quot;]
+  end
+  subgraph &quot;Gap theorems (risk formulas)&quot;
+    P[&quot;PublicPrivate&lt;br/&gt;Thm 1&quot;]
+    G[&quot;GeneralCase&lt;br/&gt;Thms 2–3&quot;]
+    C[&quot;Characterization&lt;br/&gt;Lemmas 1–3, Example 1&quot;]
+  end
+  subgraph &quot;Mechanisms (privacy + MSE)&quot;
+    M[&quot;MeanEstimation&quot;]
+    O[&quot;GaussianOracle&quot;]
+    S[&quot;OneStep&quot;]
+  end
+  subgraph &quot;DP-SGD&quot;
+    T[&quot;DPSGD&lt;br/&gt;Thm 4&quot;]
+    V[&quot;Convergence&lt;br/&gt;Prop 2, Thm 5&quot;]
+  end
+  R --&gt; P --&gt; G
+  P --&gt; C
+  G --&gt; C
+  P --&gt; T
+  G --&gt; T
+  T --&gt; V
+  D --&gt; M
+  L --&gt; M
+  R --&gt; M
+  P --&gt; M
+  D --&gt; Y --&gt; O
+  R --&gt; O
+  P --&gt; O
+  D --&gt; S</pre></div>
+<p>I also asked Claude to provide, in the README, a table of
+correspondence between the results of the paper and their Lean
+counterparts. For someone fluent in Lean, I guess this is useful, as it
+makes it possible to spot-check some of the equivalences and to know
+with high probability whether what is in the repo is valid.</p>
+<p>The first definition we can check is the DP one. Here are the paper
+and Lean versions side by side. In the paper (Definition 4), each record
+<span class="math inline">i</span> has its own budget <span
+class="math inline">\varepsilon^{(i)}</span>, and <span
+class="math inline">M</span> is heterogeneous <span
+class="math inline">\varepsilon</span>-DP if for every <span
+class="math inline">i</span>,</p>
+<blockquote>
+<p><span class="math display">\Pr(M(D) \in S) \le e^{\varepsilon^{(i)}}
+\Pr(M(D&#39;^{\,i}) \in S)</span></p>
+<p>for all measurable sets <span class="math inline">S</span> and all
+datasets <span class="math inline">D</span>, <span
+class="math inline">D&#39;^{\,i}</span> that differ arbitrarily only in
+the <span class="math inline">i</span>-th component.</p>
+</blockquote>
+<p>Here is the Lean version, exactly as in
+<code>Privacy/Defs.lean</code>:</p>
+<pre class="lean"><code><span class="lean-kw">def</span> <span class="lean-const">NeighborAt</span> {n : <span class="lean-const">ℕ</span>} {X : <span class="lean-sort">Type</span><span class="lean-op">*</span>} (i : <span class="lean-const">Fin</span> n) (D D' : <span class="lean-const">Fin</span> n <span class="lean-op">→</span> X) : <span class="lean-sort">Prop</span> <span class="lean-kw">:=</span>
+  <span class="lean-kw">∀</span> j, j <span class="lean-op">≠</span> i <span class="lean-op">→</span> D j <span class="lean-op">=</span> D' j
+
+<span class="lean-kw">def</span> <span class="lean-const">HetDP</span> {n : <span class="lean-const">ℕ</span>} {X Y : <span class="lean-sort">Type</span><span class="lean-op">*</span>} [<span class="lean-const">MeasurableSpace</span> Y]
+    (PM : (<span class="lean-const">Fin</span> n <span class="lean-op">→</span> X) <span class="lean-op">→</span> <span class="lean-const">Measure</span> Y) (ε : <span class="lean-const">Fin</span> n <span class="lean-op">→</span> <span class="lean-const">ℝ</span>) : <span class="lean-sort">Prop</span> <span class="lean-kw">:=</span>
+  <span class="lean-kw">∀</span> i D D', <span class="lean-const">NeighborAt</span> i D D' <span class="lean-op">→</span> <span class="lean-kw">∀</span> S, <span class="lean-const">MeasurableSet</span> S <span class="lean-op">→</span>
+    PM D S <span class="lean-op">≤</span> <span class="lean-const">ENNReal.ofReal</span> (<span class="lean-const">Real.exp</span> (ε i)) <span class="lean-op">*</span> PM D' S</code></pre>
+<p>I am assuming that the keywords <code>def</code> and <code>:=</code>
+are self-explanatory. After the name comes a list of arguments: those
+between curly braces are implicit (they are inferred when you use the
+definition), and those between parentheses are the ones you must
+provide. For the adjacency relation, you thus have the index and two
+databases, and it states the logical property that all other entries
+remain identical. Lean is typed, so we can see the type of each
+argument: ℕ is straightforward, <code>Fin n</code> is the set of
+integers smaller than <span class="math inline">n</span>, and
+<code>Type*</code> can be whatever type we want. As in most functional
+languages, juxtaposition is function application, which is why you do
+not need parentheses everywhere: <code>PM D S</code> corresponds to
+<code>(PM D) S</code>, i.e. PM(D)(S), and parentheses are only used when
+you need to delimit the arguments of a function. Functions from a given
+module are called as in Python, e.g. <code>Real.exp</code>, so this is
+easy to follow as well.</p>
+<p>The second definition is a bit more complex, because it uses Mathlib,
+the library containing well-defined mathematics. In particular, we have
+<code>[MeasurableSpace Y]</code>, a clever way Lean handles
+polymorphism. We know from the definition that the output space <span
+class="math inline">Y</span> is a measurable space, but not which one:
+Lean selects the right σ-algebra from the context, so the same
+definition applies to the Borel sets of <span
+class="math inline">\mathbb{R}</span> as well as to any weird measurable
+space that would appear. Here I was a bit confused by Claude’s first
+translation. As you can see, the definition is not the same as the LaTeX
+one: rather than reasoning about the probability of <span
+class="math inline">M(D)</span>, the formalization directly uses the
+output laws, not the random variables. This was something I did not
+catch from the conversation, and that I discovered by looking at the
+definition. It sounds like a reasonable choice, so the only modification
+I made was to ask for it to be renamed PM: Claude’s initial definition
+called it M, which meant that M did not have the same type in the LaTeX
+and in the Lean, which was problematic. The rest of the definition is
+pretty clear: <code>ENNReal.ofReal</code> is needed for the explicit
+conversion between reals and extended non-negative reals, the space
+where measures take their values.</p>
+<p>From this, we construct the affine operators. As defined in Section
+III-B, the affine operator releases <span
+class="math inline">\hat\mu_w(D) = \sum_i w_i x_i + Z</span> with <span
+class="math inline">Z \sim \mathrm{Lap}(\eta)</span>, for records <span
+class="math inline">x_i \in [-1/2, 1/2]</span>, and heterogeneous <span
+class="math inline">\varepsilon</span>-DP forces <span
+class="math inline">\eta \ge \max_i w_i/\varepsilon^{(i)}</span>. In
+Lean:</p>
+<details class="fold"><summary>Show the Lean code <span class="meta">(18 lines)</span></summary><pre class="lean"><code><span class="lean-kw">noncomputable</span> <span class="lean-kw">def</span> laplacePDFReal (b x : <span class="lean-const">ℝ</span>) : <span class="lean-const">ℝ</span> <span class="lean-kw">:=</span> <span class="lean-const">Real.exp</span> (<span class="lean-op">-</span><span class="lean-op">|</span>x<span class="lean-op">|</span> <span class="lean-op">/</span> b) <span class="lean-op">/</span> (<span class="lean-number">2</span> <span class="lean-op">*</span> b)
+
+<span class="lean-kw">noncomputable</span> <span class="lean-kw">def</span> laplacePDF (b x : <span class="lean-const">ℝ</span>) : <span class="lean-const">ℝ</span><span class="lean-op">≥</span><span class="lean-number">0</span>∞ <span class="lean-kw">:=</span> <span class="lean-const">ENNReal.ofReal</span> (laplacePDFReal b x)
+
+<span class="lean-kw">noncomputable</span> <span class="lean-kw">def</span> laplace (b : <span class="lean-const">ℝ</span>) : <span class="lean-const">Measure</span> <span class="lean-const">ℝ</span> <span class="lean-kw">:=</span> volume.withDensity (laplacePDF b)
+
+<span class="lean-kw">noncomputable</span> <span class="lean-kw">def</span> laplaceMech (f : <span class="lean-const">Data</span> <span class="lean-op">→</span> <span class="lean-const">ℝ</span>) (b : <span class="lean-const">ℝ</span>) (D : <span class="lean-const">Data</span>) : <span class="lean-const">Measure</span> <span class="lean-const">ℝ</span> <span class="lean-kw">:=</span>
+  (laplace b).map (<span class="lean-kw">fun</span> z <span class="lean-op">=&gt;</span> f D <span class="lean-op">+</span> z)
+
+<span class="lean-kw">noncomputable</span> <span class="lean-kw">def</span> affineMech (w : <span class="lean-const">Fin</span> n <span class="lean-op">→</span> <span class="lean-const">ℝ</span>) (η : <span class="lean-const">ℝ</span>) : (<span class="lean-const">Fin</span> n <span class="lean-op">→</span> <span class="lean-const">ℝ</span>) <span class="lean-op">→</span> <span class="lean-const">Measure</span> <span class="lean-const">ℝ</span> <span class="lean-kw">:=</span>
+  laplaceMech (<span class="lean-kw">fun</span> x <span class="lean-op">=&gt;</span> <span class="lean-op">∑</span> i, w i <span class="lean-op">*</span> x i) η
+
+<span class="lean-kw">abbrev</span> <span class="lean-const">Rec</span> : <span class="lean-sort">Type</span> <span class="lean-kw">:=</span> <span class="lean-const">Icc</span> (<span class="lean-op">-</span><span class="lean-number">1</span><span class="lean-op">/</span><span class="lean-number">2</span> : <span class="lean-const">ℝ</span>) (<span class="lean-number">1</span><span class="lean-op">/</span><span class="lean-number">2</span>)
+
+<span class="lean-kw">theorem</span> affineMech_hetDP_iff (hw : <span class="lean-kw">∀</span> i, <span class="lean-number">0</span> <span class="lean-op">≤</span> w i) (hη : <span class="lean-number">0</span> <span class="lean-op">&lt;</span> η) (hε : <span class="lean-kw">∀</span> i, <span class="lean-number">0</span> <span class="lean-op">&lt;</span> ε i) :
+    <span class="lean-const">HetDP</span> (<span class="lean-kw">fun</span> D : <span class="lean-const">Fin</span> n <span class="lean-op">→</span> <span class="lean-const">Rec</span> <span class="lean-op">=&gt;</span> affineMech w η (<span class="lean-kw">fun</span> i <span class="lean-op">=&gt;</span> (D i : <span class="lean-const">ℝ</span>))) ε <span class="lean-op">↔</span>
+      <span class="lean-kw">∀</span> i, w i <span class="lean-op">/</span> ε i <span class="lean-op">≤</span> η <span class="lean-kw">:=</span> <span class="lean-kw">by</span>
+  …</code></pre></details>
+<p>A few novelties are needed to keep reading the Lean definitions.
+First, a function is written <code>fun z =&gt; …</code>. The
+<code>noncomputable</code> keyword is a bit out of my reach: it means
+that this cannot be turned into executable code, here because real
+numbers and measures are not objects Lean can compute with. It does not
+change what is proved. In ML, no one cares whether things are
+constructive or not, so no one cares about using
+<code>noncomputable</code>. But someone formalizing a paper about logic
+would need to be more careful, and would look at the axioms each proof
+relies on (<code>#print axioms</code>), which is where non-constructive
+reasoning shows up. We define a record <code>Rec</code> not with
+<code>def</code> but with <code>abbrev</code>, to shorten the proofs: it
+means that the definition is always replaced directly, rather than
+having to be unpacked. Finally, we can state under which condition the
+affine estimator is heterogeneous DP. Here I only report the statement
+of the theorem: what follows <code>by</code> is the proof itself, hidden
+in the dots.</p>
+<p>As we study the mean squared error in the paper, we also have a
+definition for it, which introduces other notations, so I report it as
+well.</p>
+<pre class="lean"><code><span class="lean-kw">noncomputable</span> <span class="lean-kw">def</span> mse (PM : (<span class="lean-const">Fin</span> n <span class="lean-op">→</span> <span class="lean-const">ℝ</span>) <span class="lean-op">→</span> <span class="lean-const">Measure</span> <span class="lean-const">ℝ</span>) (P : <span class="lean-const">Measure</span> <span class="lean-const">ℝ</span>) : <span class="lean-const">ℝ</span> <span class="lean-kw">:=</span>
+  <span class="lean-op">∫</span> x, <span class="lean-op">∫</span> y, (y <span class="lean-op">-</span> <span class="lean-op">∫</span> t, t <span class="lean-op">∂</span>P) <span class="lean-op">^</span> <span class="lean-number">2</span> <span class="lean-op">∂</span>(PM x) <span class="lean-op">∂</span>(<span class="lean-const">Measure.pi</span> <span class="lean-kw">fun</span> _ : <span class="lean-const">Fin</span> n <span class="lean-op">=&gt;</span> P)
+
+<span class="lean-kw">noncomputable</span> <span class="lean-kw">def</span> drMSE (PM : (<span class="lean-const">Fin</span> n <span class="lean-op">→</span> <span class="lean-const">ℝ</span>) <span class="lean-op">→</span> <span class="lean-const">Measure</span> <span class="lean-const">ℝ</span>) : <span class="lean-const">ℝ</span> <span class="lean-kw">:=</span>
+  sSup (mse PM <span class="lean-op">''</span> <span class="lean-const">SupportedProb</span>)</code></pre>
+<p>Here you have to remember the unusual choice to reason about the law
+of the mechanism <span class="math inline">M</span> rather than random
+variables. The outer integral
+<code>∫ x, … ∂(Measure.pi fun _ : Fin n =&gt; P)</code> takes the
+expectation with respect to <span class="math inline">P^n</span>, the
+distribution of <span class="math inline">n</span> i.i.d. samples from
+<span class="math inline">P</span>. Then <code>∫ y, … ∂(PM x)</code> is
+the integral over the output of <span class="math inline">M</span> on
+the input <span class="math inline">x</span>. In other words, the Lean
+definition is indeed</p>
+<p><span class="math display">\mathrm{MSE} = \int \left( \int (y -
+\mu_P)^2 \, d(\mathrm{PM}\ x)(y) \right) dP^n(x).</span></p>
+<p>Then we still need to take the supremum over all possible
+distributions. A weird notation is <code>''</code>: here
+<code>mse</code> takes as second argument a measure rather than a set of
+measures, so we need to lift the function to sets, which we do
+carelessly in maths, but which changes the type, so it has to be done
+explicitly in Lean.</p>
+<h3 id="going-deeper">Going deeper</h3>
+<p>From this, we can move to the definitions of the best affine
+estimator and of the threshold operator. Most of the useful definitions
+for this are in <code>Risks.lean</code> and
+<code>MeanEstimation.lean</code>. Allow me to skip some of them and keep
+only the most interesting ones.</p>
+<details class="fold"><summary>Show the Lean code <span class="meta">(31 lines)</span></summary><pre class="lean"><code><span class="lean-kw">noncomputable</span> <span class="lean-kw">def</span> persObj (A B : <span class="lean-const">ℝ</span>) (w : ι <span class="lean-op">→</span> <span class="lean-const">ℝ</span>) (M : <span class="lean-const">ℝ</span>) : <span class="lean-const">ℝ</span> <span class="lean-kw">:=</span>
+  A <span class="lean-op">*</span> <span class="lean-op">∑</span> i, w i <span class="lean-op">^</span> <span class="lean-number">2</span> <span class="lean-op">+</span> B <span class="lean-op">*</span> M <span class="lean-op">^</span> <span class="lean-number">2</span>
+
+<span class="lean-kw">noncomputable</span> <span class="lean-kw">def</span> nThr (pub : <span class="lean-const">Finset</span> ι) (u : ι <span class="lean-op">→</span> <span class="lean-const">ℝ</span>) (t : <span class="lean-const">ℝ</span>) : <span class="lean-const">ℕ</span> <span class="lean-kw">:=</span>
+  #{i <span class="lean-op">|</span> i <span class="lean-op">∈</span> pub <span class="lean-op">∨</span> t <span class="lean-op">≤</span> u i}
+
+<span class="lean-kw">def</span> persSet (pub : <span class="lean-const">Finset</span> ι) (u : ι <span class="lean-op">→</span> <span class="lean-const">ℝ</span>) (A B : <span class="lean-const">ℝ</span>) : <span class="lean-const">Set</span> <span class="lean-const">ℝ</span> <span class="lean-kw">:=</span>
+  {r <span class="lean-op">|</span> <span class="lean-kw">∃</span> w M, <span class="lean-const">Feasible</span> pub u w M <span class="lean-op">∧</span> persObj A B w M <span class="lean-op">=</span> r}
+
+<span class="lean-comment">/-- Values of the threshold objective over admissible thresholds. -/</span>
+<span class="lean-kw">def</span> thrSet (pub : <span class="lean-const">Finset</span> ι) (u : ι <span class="lean-op">→</span> <span class="lean-const">ℝ</span>) (A B : <span class="lean-const">ℝ</span>) : <span class="lean-const">Set</span> <span class="lean-const">ℝ</span> <span class="lean-kw">:=</span>
+  {r <span class="lean-op">|</span> <span class="lean-kw">∃</span> t, <span class="lean-number">0</span> <span class="lean-op">&lt;</span> t <span class="lean-op">∧</span> <span class="lean-number">0</span> <span class="lean-op">&lt;</span> nThr pub u t <span class="lean-op">∧</span> thrObj A B t (nThr pub u t) <span class="lean-op">=</span> r}
+
+<span class="lean-comment">/-- `𝓡_pers(u; A, B)`, Eq. `eq:generic-pers`. -/</span>
+<span class="lean-kw">noncomputable</span> <span class="lean-kw">def</span> persRisk (pub : <span class="lean-const">Finset</span> ι) (u : ι <span class="lean-op">→</span> <span class="lean-const">ℝ</span>) (A B : <span class="lean-const">ℝ</span>) : <span class="lean-const">ℝ</span> <span class="lean-kw">:=</span>
+  sInf (persSet pub u A B)
+
+<span class="lean-comment">/-- `𝓡_thr(u; A, B)`, Eq. `eq:generic-thr`. -/</span>
+<span class="lean-kw">noncomputable</span> <span class="lean-kw">def</span> thrRisk (pub : <span class="lean-const">Finset</span> ι) (u : ι <span class="lean-op">→</span> <span class="lean-const">ℝ</span>) (A B : <span class="lean-const">ℝ</span>) : <span class="lean-const">ℝ</span> <span class="lean-kw">:=</span>
+  sInf (thrSet pub u A B)
+
+<span class="lean-kw">noncomputable</span> <span class="lean-kw">def</span> thrMechPub (pub : <span class="lean-const">Finset</span> (<span class="lean-const">Fin</span> n)) (ε : <span class="lean-const">Fin</span> n <span class="lean-op">→</span> <span class="lean-const">ℝ</span>) (t : <span class="lean-const">ℝ</span>)
+    (x : <span class="lean-const">Fin</span> n <span class="lean-op">→</span> <span class="lean-const">ℝ</span>) : <span class="lean-const">Measure</span> <span class="lean-const">ℝ</span> <span class="lean-kw">:=</span>
+  (laplace (<span class="lean-number">1</span> <span class="lean-op">/</span> ((nThr pub ε t : <span class="lean-const">ℝ</span>) <span class="lean-op">*</span> t))).map
+    (<span class="lean-kw">fun</span> z <span class="lean-op">=&gt;</span> <span class="lean-number">1</span> <span class="lean-op">/</span> (nThr pub ε t : <span class="lean-const">ℝ</span>) <span class="lean-op">*</span>
+      <span class="lean-op">∑</span> i, (<span class="lean-kw">if</span> i <span class="lean-op">∈</span> pub <span class="lean-op">∨</span> t <span class="lean-op">≤</span> ε i <span class="lean-kw">then</span> (<span class="lean-number">1</span> : <span class="lean-const">ℝ</span>) <span class="lean-kw">else</span> <span class="lean-number">0</span>) <span class="lean-op">*</span> x i <span class="lean-op">+</span> z)
+
+<span class="lean-kw">def</span> affRiskSetPub (pub : <span class="lean-const">Finset</span> (<span class="lean-const">Fin</span> n)) (ε : <span class="lean-const">Fin</span> n <span class="lean-op">→</span> <span class="lean-const">ℝ</span>) : <span class="lean-const">Set</span> <span class="lean-const">ℝ</span> <span class="lean-kw">:=</span>
+  {r <span class="lean-op">|</span> <span class="lean-kw">∃</span> (w : <span class="lean-const">Fin</span> n <span class="lean-op">→</span> <span class="lean-const">ℝ</span>) (η : <span class="lean-const">ℝ</span>), (<span class="lean-kw">∀</span> i, <span class="lean-number">0</span> <span class="lean-op">≤</span> w i) <span class="lean-op">∧</span> <span class="lean-op">∑</span> i, w i <span class="lean-op">=</span> <span class="lean-number">1</span> <span class="lean-op">∧</span> <span class="lean-number">0</span> <span class="lean-op">&lt;</span> η <span class="lean-op">∧</span>
+    <span class="lean-const">HetDPPub</span> pub (<span class="lean-kw">fun</span> D : <span class="lean-const">Fin</span> n <span class="lean-op">→</span> <span class="lean-const">Rec</span> <span class="lean-op">=&gt;</span> affineMech w η (<span class="lean-kw">fun</span> i <span class="lean-op">=&gt;</span> (D i : <span class="lean-const">ℝ</span>))) ε <span class="lean-op">∧</span>
+    drMSE (affineMech w η) <span class="lean-op">=</span> r}</code></pre></details>
+<p>Once we have all of this, the theorems themselves are easy to read.
+Here is the first one:</p>
+<pre class="lean"><code><span class="lean-kw">theorem</span> public_mse_factor_two (pub : <span class="lean-const">Finset</span> (<span class="lean-const">Fin</span> n)) (ε : <span class="lean-const">Fin</span> n <span class="lean-op">→</span> <span class="lean-const">ℝ</span>) (ε₁ : <span class="lean-const">ℝ</span>)
+    (hε₁ : <span class="lean-number">0</span> <span class="lean-op">&lt;</span> ε₁) (hpub : pub.Nonempty) (hpriv : pubᶜ.Nonempty)
+    (hu : <span class="lean-kw">∀</span> i <span class="lean-op">∉</span> pub, ε i <span class="lean-op">=</span> ε₁) :
+    sInf {r <span class="lean-op">|</span> <span class="lean-kw">∃</span> t, <span class="lean-number">0</span> <span class="lean-op">&lt;</span> t <span class="lean-op">∧</span> <span class="lean-number">0</span> <span class="lean-op">&lt;</span> nThr pub ε t <span class="lean-op">∧</span> drMSE (thrMechPub pub ε t) <span class="lean-op">=</span> r}
+      <span class="lean-op">≤</span> <span class="lean-number">2</span> <span class="lean-op">*</span> sInf (affRiskSetPub pub ε)</code></pre>
+<p>As you can see, it states that the ratio between the single-threshold
+and the best affine estimators, with public data and one private privacy
+level, is at most two. It is very similar for the general case, showing
+that the ratio is at most <span class="math inline">\min\{(1 + \log_2
+n)^2, m^2\}</span> for <span class="math inline">m</span> different
+privacy levels, and that it can indeed grow like <span
+class="math inline">m^2</span>, which is attained when each privacy
+budget is double the previous one but with half as much data.</p>
+<p>Then there is the extension to gradient descent, which I also
+reviewed chunk by chunk in the chat. I have the impression that it was a
+lot of work for little mathematical content, as it requires building
+probabilities in higher dimensions and doing well-known optimization,
+which are a bit orthogonal to the paper.</p>
+<p>Note that I have not looked at the proofs at all. It is indeed
+possible that they differ from the paper’s. Here I would argue that
+Occam’s razor is enough for me. The proofs are not particularly
+difficult or novel: the LaTeX version is thus a plausible path to a
+proof that compiles, and it is unlikely that ignoring the “oracle” of
+the LaTeX proof would cost fewer tokens. I would also assume that Claude
+would have flagged it, and finally, I don’t believe that the exact
+correspondence between the Lean proofs and the paper’s matters in this
+case. How to do it in general remains quite open, even if I have the
+impression that intermediate lemmas and definitions channel the
+information and limit the risks. I would be happy to test or discuss
+ways to harness the LLM more precisely. At some point, I just believe in
+it because I have chatted with it long enough, in the same way that I
+could trust a co-author’s implementation without reading the code, just
+because the results agree and the feedback I get is coherent.</p>
+<p>When proofreading this post with Claude, it pointed out that it would
+not necessarily have flagged it: the prompt explicitly allows the proofs
+to differ from the paper’s, and some do. For instance, instead of the
+max over records in the affine risk, the Lean version introduces an
+extra variable <span class="math inline">M</span> that bounds every
+ratio <span class="math inline">w_i/\varepsilon^{(i)}</span>, and some
+equalities of infima with public records are proved by approximation.
+These are technical reformulations rather than different core ideas, but
+no one has systematically compared the proof routes either.</p>
+<h2 id="what-next">What next?</h2>
+<p>Should we have a full differential privacy library in Lean? I think
+so: it would be a nice way to build on each other’s work and to provide
+sound definitions. I asked Claude whether we could have used existing
+libraries, but they sounded ill-fitted:</p>
+<p>The main Lean DP library, SampCert (Tristan, de Medeiros et al.,
+<em>Verified Foundations for Differential Privacy</em>, PLDI 2025,
+arXiv:2412.01671), is built for verified sampling algorithms and powers
+the DP service of AWS. It works with distributions on countable sets
+(discrete Laplace and Gaussian samplers) and a single privacy budget.
+The paper needs continuous Laplace and Gaussian noise, general data
+distributions, and one budget per record, none of which SampCert covers.
+So we wrote our own definitions: DP, heterogeneous DP, Rényi divergence,
+zCDP, and the Laplace distribution. Two consequences:</p>
+<ul>
+<li>a reader has to check our definitions against the paper; they are
+not standard, shared objects;</li>
+<li>none of the surrounding theory (composition, post-processing) comes
+for free, only what the paper needed.</li>
+</ul>
+<p>Where an independent formalization exists, the first drawback can be
+reduced by proving the two definitions agree. Our Rényi divergence, on
+which zCDP rests, provably equals the one in Rémy Degenne’s <a
+href="https://github.com/RemyDegenne/testing-lower-bounds">TestingLowerBounds</a>
+for probability measures and every order <span
+class="math inline">\alpha &gt; 1</span>
+(<code>lean-bridges/renyi-tlb</code>).</p>
+<p>But this is a rather anecdotal overlap.</p>
+<p>Here I believe we face the problem of the current phase transition:
+each month, the cost of doing Lean with a new LLM decreases, so
+investing in old LLM outputs or human outputs seems counterproductive.
+However, if we consider that generating Lean now has a negligible cost,
+then what limits it is the design choices made to codify a given field,
+which I believe should be based on what we consider easiest for humans
+to follow. It could then be a path towards including Lean code in our
+submissions, and having reviewers check it more easily than an extremely
+long LaTeX file generated by an LLM, as we currently ask them to!</p>
+<p>Finally, I could not resist the pun in the title. It is also a
+reference to the book <em>Lean In</em>, which is very controversial from
+a feminist point of view: most of its advice tends to tell women to
+adopt the worst of patriarchy to achieve personal success. The analogy
+with asking mathematicians to adopt new techniques that some also point
+out as dehumanizing was too sweet for me!</p>
+  </article>
+</div>
+
+<a class="to-top" href="#" aria-label="Back to top">↑</a>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({ startOnLoad: true, theme: "neutral", securityLevel: "strict" });
+</script>
+<script>
+  // Render the LaTeX that pandoc left in <span class="math">.
+  document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll("span.math").forEach(function (el) {
+      katex.render(el.textContent, el, {
+        displayMode: el.classList.contains("display"), throwOnError: false });
+    });
+  });
+</script>
+<script>
+  // Highlight the section being read in the table of contents.
+  (function () {
+    const links = Array.from(document.querySelectorAll("nav.toc a[href^='#']"));
+    const targets = links
+      .map(a => document.getElementById(decodeURIComponent(a.hash.slice(1))))
+      .filter(Boolean);
+    const toTop = document.querySelector(".to-top");
+    function update() {
+      let current = null;
+      for (const t of targets) {
+        if (t.getBoundingClientRect().top < 120) current = t; else break;
+      }
+      links.forEach(a => a.classList.toggle("active",
+        !!current && decodeURIComponent(a.hash.slice(1)) === current.id));
+      toTop.classList.toggle("visible", window.scrollY > 600);
+    }
+    document.addEventListener("scroll", update, { passive: true });
+    update();
+    // On narrow screens, close the contents box after jumping to a section.
+    links.forEach(a => a.addEventListener("click", () => {
+      if (window.matchMedia("(max-width: 960px)").matches) {
+        a.closest("details").open = false;
+      }
+    }));
+    // Contents open beside the article on wide screens, folded above it on narrow ones.
+    const narrow = window.matchMedia("(max-width: 960px)");
+    const tocBox = document.querySelector("nav.toc details");
+    const syncToc = () => { tocBox.open = !narrow.matches; };
+    narrow.addEventListener("change", syncToc);
+    syncToc();
+  })();
+</script>
+</body>
+</html>
