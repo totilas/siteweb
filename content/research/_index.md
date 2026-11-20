@@ -28,7 +28,7 @@ I am lucky to be part of a great team, [MILES](https://miles.lamsade.fr/): feel 
 
 *Current supervision*
 
-- Uddalak Mukherjee, PhD student co-supervised with Yann Chevaleyre (starting September 2026)
+- [Uddalak Mukherjee](https://jacknife49.github.io/jackie49.github.io/), PhD student co-supervised with Yann Chevaleyre (starting September 2026)
 
 *Previous supervision*
 
