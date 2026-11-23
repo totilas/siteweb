@@ -83,3 +83,7 @@ Here are some possible topics:
 Last year, I completely failed to answer, or even read with proper care, all the emails I received. So this year I am trying something new: I will recruit through the [ELLIS PhD program](https://ellis.eu/research/phd-postdoc/guidelines-phd-central-recruiting), so please apply there! If you contact me by email (for instance, if you are at ENS or Polytechnique and want an internship while your 4A is still ahead of you), please follow these guidelines.
 
 The email subject line should be: [Internship application] + the topic you are interested in. The email should include what you hope to achieve by doing a PhD, what you can do in maths and in code, which topics interest you among Privacy, Performative Learning, Fairness, Unlearning, Federated Learning, and Decentralized Learning, and optionally the name of a professor who knows you. The whole email should be at most 500 words. I speak French and English.
+
+Please bear in mind that I receive too many emails, as shown below.
+
+![Number of emails I sent and received per year, by institutional address](/img/emails_per_year.webp)
