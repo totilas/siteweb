@@ -692,14 +692,15 @@ so: it would be a nice way to build on each other’s work and to provide
 sound definitions. I asked Claude whether we could have used existing
 libraries, but they sounded ill-fitted:</p>
 <p>The main Lean DP library, SampCert (Tristan, de Medeiros et al.,
-<em>Verified Foundations for Differential Privacy</em>, PLDI 2025,
-arXiv:2412.01671), is built for verified sampling algorithms and powers
-the DP service of AWS. It works with distributions on countable sets
-(discrete Laplace and Gaussian samplers) and a single privacy budget.
-The paper needs continuous Laplace and Gaussian noise, general data
-distributions, and one budget per record, none of which SampCert covers.
-So we wrote our own definitions: DP, heterogeneous DP, Rényi divergence,
-zCDP, and the Laplace distribution. Two consequences:</p>
+<em>Verified Foundations for Differential Privacy</em>, PLDI 2025, <a
+href="https://arxiv.org/pdf/2412.01671">arXiv:2412.01671</a>), is built
+for verified sampling algorithms and powers the DP service of AWS. It
+works with distributions on countable sets (discrete Laplace and
+Gaussian samplers) and a single privacy budget. The paper needs
+continuous Laplace and Gaussian noise, general data distributions, and
+one budget per record, none of which SampCert covers. So we wrote our
+own definitions: DP, heterogeneous DP, Rényi divergence, zCDP, and the
+Laplace distribution. Two consequences:</p>
 <ul>
 <li>a reader has to check our definitions against the paper; they are
 not standard, shared objects;</li>
@@ -708,11 +709,11 @@ for free, only what the paper needed.</li>
 </ul>
 <p>Where an independent formalization exists, the first drawback can be
 reduced by proving the two definitions agree. Our Rényi divergence, on
-which zCDP rests, provably equals the one in Rémy Degenne’s <a
-href="https://github.com/RemyDegenne/testing-lower-bounds">TestingLowerBounds</a>
-for probability measures and every order <span
+which zCDP rests, provably equals the one in <a
+href="https://github.com/stat-lib/statlib">Statlib</a>, a Lean library
+for statistics, for probability measures and every order <span
 class="math inline">\alpha &gt; 1</span>
-(<code>lean-bridges/renyi-tlb</code>).</p>
+(<code>lean-bridges/renyi-statlib</code>).</p>
 <p>But this is a rather anecdotal overlap.</p>
 <p>Here I believe we face the problem of the current phase transition:
 each month, the cost of doing Lean with a new LLM decreases, so
